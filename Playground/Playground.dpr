@@ -12,7 +12,9 @@ uses
   PrepareRequestSignature in '..\PrepareRequestSignature.pas',
   AmazonEmailAuthentication in '..\AmazonEmailAuthentication.pas',
   EncodeQueryParams in '..\EncodeQueryParams.pas',
-  PopulateResponseInfo in '..\PopulateResponseInfo.pas';
+  PopulateResponseInfo in '..\PopulateResponseInfo.pas',
+  AmazonEmailServiceRegions in '..\AmazonEmailServiceRegions.pas',
+  AmazonEmailServiceHeaders in '..\AmazonEmailServiceHeaders.pas';
 
 const
   AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA';

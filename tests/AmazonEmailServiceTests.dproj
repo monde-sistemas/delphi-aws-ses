@@ -40,6 +40,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <SanitizedProjectName>AmazonEmailServiceTests</SanitizedProjectName>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_Define>CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
@@ -91,6 +92,8 @@
         <DCCReference Include="..\AmazonEmailServiceRegions.pas"/>
         <DCCReference Include="..\AmazonEmailService.pas"/>
         <DCCReference Include="AmazonEmailServiceRegionsTests.pas"/>
+        <DCCReference Include="..\AmazonEmailServiceHeaders.pas"/>
+        <DCCReference Include="AmazonEmailServiceHeadersTests.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -465,6 +468,7 @@
                 <TestFramework>DUnit / Delphi Win32</TestFramework>
                 <TestRunner>Console</TestRunner>
                 <SourceProjectName>D:\Monde\aws-ses\Playground\Playground.dproj</SourceProjectName>
+                <TestProjectName/>
             </UnitTesting>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

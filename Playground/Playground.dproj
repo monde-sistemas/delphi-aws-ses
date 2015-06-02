@@ -87,6 +87,8 @@
         <DCCReference Include="..\AmazonEmailAuthentication.pas"/>
         <DCCReference Include="..\EncodeQueryParams.pas"/>
         <DCCReference Include="..\PopulateResponseInfo.pas"/>
+        <DCCReference Include="..\AmazonEmailServiceRegions.pas"/>
+        <DCCReference Include="..\AmazonEmailServiceHeaders.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

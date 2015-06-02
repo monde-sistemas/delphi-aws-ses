@@ -23,7 +23,7 @@ type
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer); overload;
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
-    function GetCurrentTime: string;
+    function GetCurrentDate: string;
     function GetSignature(const StringToSign: string): string;
   public
     constructor Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
@@ -41,9 +41,8 @@ uses
   SysUtils,
   EncodeQueryParams,
   PopulateResponseInfo,
-  AmazonEmailServiceRegions;
-
-{ TAmazonEmailService }
+  AmazonEmailServiceRegions,
+  AmazonEmailServiceHeaders;
 
 constructor TAmazonEmailService.Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
 begin
@@ -52,11 +51,9 @@ begin
   FAWSSecretKey := AWSSecretKey;
 end;
 
-function TAmazonEmailService.GetCurrentTime: string;
-const
-  FORMAT_HTTP_DATE = 'ddd, dd mmm yyyy hh:nn:ss "GMT"';
+function TAmazonEmailService.GetCurrentDate: string;
 begin
-  Result := FormatDateTime(FORMAT_HTTP_DATE, TTimeZone.Local.ToUniversalTime(Now), TFormatSettings.Create('en-US'));
+  Result := TAmazonEmailServiceHeaders.GetDate(Now);
 end;
 
 procedure TAmazonEmailService.IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
@@ -125,7 +122,7 @@ begin
   Peer.GetRequest.ContentType := 'application/x-www-form-urlencoded';
   Peer.GetRequest.ContentLength := 230;
 
-  CurrentTime := GetCurrentTime;
+  CurrentTime := GetCurrentDate;
   Peer.GetRequest.CustomHeaders.AddValue('Date', CurrentTime);
 
   AuthorizationHeader := Format('AWS3-HTTPS AWSAccessKeyId=%s, Algorithm=HmacSHA256, Signature=%s',

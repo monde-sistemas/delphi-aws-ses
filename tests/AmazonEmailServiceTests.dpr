@@ -17,7 +17,9 @@ uses
   PopulateResponseInfoTests in 'PopulateResponseInfoTests.pas',
   AmazonEmailServiceRegions in '..\AmazonEmailServiceRegions.pas',
   AmazonEmailService in '..\AmazonEmailService.pas',
-  AmazonEmailServiceRegionsTests in 'AmazonEmailServiceRegionsTests.pas';
+  AmazonEmailServiceRegionsTests in 'AmazonEmailServiceRegionsTests.pas',
+  AmazonEmailServiceHeaders in '..\AmazonEmailServiceHeaders.pas',
+  AmazonEmailServiceHeadersTests in 'AmazonEmailServiceHeadersTests.pas';
 
 {$R *.RES}
 
