@@ -19,7 +19,9 @@ uses
   AmazonEmailService in '..\AmazonEmailService.pas',
   AmazonEmailServiceRegionsTests in 'AmazonEmailServiceRegionsTests.pas',
   AmazonEmailServiceHeaders in '..\AmazonEmailServiceHeaders.pas',
-  AmazonEmailServiceHeadersTests in 'AmazonEmailServiceHeadersTests.pas';
+  AmazonEmailServiceHeadersTests in 'AmazonEmailServiceHeadersTests.pas',
+  BuildQueryParameters in '..\BuildQueryParameters.pas',
+  BuildQueryParametersTests in 'BuildQueryParametersTests.pas';
 
 {$R *.RES}
 
