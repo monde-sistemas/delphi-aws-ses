@@ -5,7 +5,6 @@ interface
 uses
   Classes,
   IPPeerAPI,
-  PrepareRequestSignature,
   Data.Cloud.CloudAPI,
   IPPeerClient;
 
@@ -23,13 +22,11 @@ type
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer); overload;
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
-    function GetCurrentDate: string;
-    function GetSignature(const StringToSign: string): string;
   public
     constructor Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
-      out Response: TCloudResponseInfo; const IsHtmlEmail: Boolean = False): Boolean; overload;
-    function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const IsHtmlEmail: Boolean = False): Boolean; overload;
+      out Response: TCloudResponseInfo; const IsHtmlEmail: Boolean = True): Boolean; overload;
+    function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const IsHtmlEmail: Boolean = True): Boolean; overload;
     property IsHtmlEmail: Boolean read FIsHtmlEmail write FIsHtmlEmail;
   end;
 
@@ -40,8 +37,8 @@ uses
   DateUtils,
   SysUtils,
   PopulateResponseInfo,
+  AmazonEmailServiceRequests,
   AmazonEmailServiceRegions,
-  AmazonEmailServiceHeaders,
   BuildQueryParameters;
 
 constructor TAmazonEmailService.Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
@@ -49,11 +46,6 @@ begin
   FAWSRegion := AWSRegion;
   FAWSAccessKey := AWSAccessKey;
   FAWSSecretKey := AWSSecretKey;
-end;
-
-function TAmazonEmailService.GetCurrentDate: string;
-begin
-  Result := TAmazonEmailServiceHeaders.GetDate(Now);
 end;
 
 procedure TAmazonEmailService.IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
@@ -116,18 +108,14 @@ end;
 
 procedure TAmazonEmailService.PrepareRequest(const Peer: IIPHTTP);
 var
-  CurrentTime: string;
-  AuthorizationHeader: string;
+  AmazonEmailServiceRequests: TAmazonEmailServiceRequests;
 begin
-  Peer.GetRequest.ContentType := 'application/x-www-form-urlencoded';
-  Peer.GetRequest.ContentLength := 230;
-
-  CurrentTime := GetCurrentDate;
-  Peer.GetRequest.CustomHeaders.AddValue('Date', CurrentTime);
-
-  AuthorizationHeader := Format('AWS3-HTTPS AWSAccessKeyId=%s, Algorithm=HmacSHA256, Signature=%s',
-    [FAWSAccessKey, GetSignature(CurrentTime)]);
-  Peer.GetRequest.CustomHeaders.AddValue('X-Amzn-Authorization', AuthorizationHeader);
+  AmazonEmailServiceRequests := TAmazonEmailServiceRequests.Create(FAWSAccessKey, FAWSSecretKey);
+  try
+    AmazonEmailServiceRequests.PrepareRequest(Peer);
+  finally
+    AmazonEmailServiceRequests.Free;
+  end;
 end;
 
 function TAmazonEmailService.SendMail(const Recipients: TStrings;
@@ -136,18 +124,6 @@ var
   Response: TCloudResponseInfo;
 begin
   Result := SendMail(Recipients, FromAddress, Subject, MessageBody, Response, IsHtmlEmail);
-end;
-
-function TAmazonEmailService.GetSignature(const StringToSign: string): string;
-var
-  PrepareRequestSignature: TPrepareRequestSignature;
-begin
-  PrepareRequestSignature := TPrepareRequestSignature.Create(FAWSAccessKey, FAWSSecretKey);
-  try
-    Result := PrepareRequestSignature.GetSignature(StringToSign);
-  finally
-    PrepareRequestSignature.Free;
-  end;
 end;
 
 function TAmazonEmailService.BuildQueryParameters(const Recipients: TStrings;

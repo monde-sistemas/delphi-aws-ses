@@ -14,7 +14,8 @@ uses
   EncodeQueryParams in '..\EncodeQueryParams.pas',
   PopulateResponseInfo in '..\PopulateResponseInfo.pas',
   AmazonEmailServiceRegions in '..\AmazonEmailServiceRegions.pas',
-  AmazonEmailServiceHeaders in '..\AmazonEmailServiceHeaders.pas';
+  AmazonEmailServiceRequests in '..\AmazonEmailServiceRequests.pas',
+  BuildQueryParameters in '..\BuildQueryParameters.pas';
 
 const
   AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA';

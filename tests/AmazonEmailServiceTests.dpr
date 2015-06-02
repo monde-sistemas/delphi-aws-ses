@@ -18,10 +18,11 @@ uses
   AmazonEmailServiceRegions in '..\AmazonEmailServiceRegions.pas',
   AmazonEmailService in '..\AmazonEmailService.pas',
   AmazonEmailServiceRegionsTests in 'AmazonEmailServiceRegionsTests.pas',
-  AmazonEmailServiceHeaders in '..\AmazonEmailServiceHeaders.pas',
+  AmazonEmailServiceRequests in '..\AmazonEmailServiceRequests.pas',
   AmazonEmailServiceHeadersTests in 'AmazonEmailServiceHeadersTests.pas',
   BuildQueryParameters in '..\BuildQueryParameters.pas',
-  BuildQueryParametersTests in 'BuildQueryParametersTests.pas';
+  BuildQueryParametersTests in 'BuildQueryParametersTests.pas',
+  AmazonEmailServiceRequestsTests in 'AmazonEmailServiceRequestsTests.pas';
 
 {$R *.RES}
 
