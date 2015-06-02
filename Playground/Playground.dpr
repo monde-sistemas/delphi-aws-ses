@@ -27,8 +27,8 @@ var
   Response: TCloudResponseInfo;
 begin
   Recipients := TStringList.Create;
-  Recipients.Add('martinusso@gmail.com');
-  FromAddress := 'martinusso@gmail.com';
+  Recipients.Add('breno.dev@gmail.com');
+  FromAddress := 'breno.dev@gmail.com';
   Subject := 'This is the subject line with HTML.';
 //  MessageBody := 'Hello. I hope you are having a good day.';
   MessageBody := '<!DOCTYPE html>' +
