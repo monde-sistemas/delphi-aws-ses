@@ -3,16 +3,19 @@ unit BuildQueryParametersTests;
 interface
 
 uses
-  TestFramework,
+  DUnitX.TestFramework,
   BuildQueryParameters;
 
 type
-  TBuildQueryParametersTests = class(TTestCase)
+  [TestFixture]
+  TBuildQueryParametersTests = class
   strict private
     FBuildQueryParameters: TBuildQueryParameters;
   public
-    procedure SetUp; override;
-    procedure TearDown; override;
+    [Setup]
+    procedure SetUp;
+    [TearDown]
+    procedure TearDown;
   published
     procedure GetQueryParams_WithHTMLBody_EncodedParamsReturned;
     procedure GetQueryParams_WithTextBody_EncodedParamsReturned;
@@ -62,7 +65,7 @@ begin
 
   EncodedParams := FBuildQueryParameters.GetQueryParams(Recipients, FromAddress, Subject, MessageBody);
 
-  CheckEquals(EXPECTED_RETURN, EncodedParams.DataString);
+  Assert.AreEqual(EXPECTED_RETURN, EncodedParams.DataString);
 end;
 
 procedure TBuildQueryParametersTests.GetQueryParams_WithTextBody_EncodedParamsReturned;
@@ -88,7 +91,7 @@ begin
   FBuildQueryParameters.EmailBody := eText;
   EncodedParams := FBuildQueryParameters.GetQueryParams(Recipients, FromAddress, Subject, MessageBody);
 
-  CheckEquals(EXPECTED_RETURN, EncodedParams.DataString);
+  Assert.AreEqual(EXPECTED_RETURN, EncodedParams.DataString);
 end;
 
 procedure TBuildQueryParametersTests.SetUp;
@@ -104,6 +107,6 @@ begin
 end;
 
 initialization
-   RegisterTest(TBuildQueryParametersTests.Suite);
+  TDUnitX.RegisterTestFixture(TBuildQueryParametersTests);
 
 end.

@@ -3,17 +3,20 @@ unit AmazonEmailServiceRequestsTests;
 interface
 
 uses
-  TestFramework,
+  DUnitX.TestFramework,
   AmazonEmailServiceRequests;
 
 type
-  TAmazonEmailServiceRequestsTests = class(TTestCase)
+  [TestFixture]
+  TAmazonEmailServiceRequestsTests = class
   strict private
     FAmazonEmailServiceRequests: TAmazonEmailServiceRequests;
     function GetCurrentDate(const ADateTime: TDateTime): string;
   public
-    procedure SetUp; override;
-    procedure TearDown; override;
+    [Setup]
+    procedure SetUp;
+    [TearDown]
+    procedure TearDown;
   published
     procedure PrepareRequest_Peer_AssignRequests;
   end;
@@ -40,11 +43,11 @@ begin
   try
     FAmazonEmailServiceRequests.PrepareRequest(Peer);
 
-    CheckEquals('application/x-www-form-urlencoded', Peer.GetRequest.ContentType);
-    CheckEquals(230, Peer.GetRequest.ContentLength);
-    CheckEquals(GetCurrentDate(FAmazonEmailServiceRequests.DateRequest), Peer.GetRequest.CustomHeaders.Values['Date']);
-    CheckEquals('AWS3-HTTPS AWSAccessKeyId=AKIAJQF6P3QUHRSJPZCA, Algorithm=HmacSHA256, Signature=', Copy(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization'], 1, 80));
-    CheckEquals(124, Length(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization']));
+    Assert.AreEqual('application/x-www-form-urlencoded', Peer.GetRequest.ContentType);
+    Assert.AreEqual(230, Integer(Peer.GetRequest.ContentLength));
+    Assert.AreEqual(GetCurrentDate(FAmazonEmailServiceRequests.DateRequest), Peer.GetRequest.CustomHeaders.Values['Date']);
+    Assert.AreEqual('AWS3-HTTPS AWSAccessKeyId=AKIAJQF6P3QUHRSJPZCA, Algorithm=HmacSHA256, Signature=', Copy(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization'], 1, 80));
+    Assert.AreEqual(124, Length(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization']));
   finally
     Peer := nil;
   end;
@@ -66,6 +69,6 @@ begin
 end;
 
 initialization
-   RegisterTest(TAmazonEmailServiceRequestsTests.Suite);
+  TDUnitX.RegisterTestFixture(TAmazonEmailServiceRequestsTests);
 
 end.

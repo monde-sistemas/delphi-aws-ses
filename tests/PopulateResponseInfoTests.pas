@@ -3,18 +3,21 @@ unit PopulateResponseInfoTests;
 interface
 
 uses
-  TestFramework,
+  DUnitX.TestFramework,
   PopulateResponseInfo,
   Data.Cloud.CloudAPI;
 
 type
-  TPopulateResponseInfoTests = class(TTestCase)
+  [TestFixture]
+  TPopulateResponseInfoTests = class
   strict private
     FPopulateResponseInfo: TPopulateResponseInfo;
     FResponseInfo: TCloudResponseInfo;
   public
-    procedure SetUp; override;
-    procedure TearDown; override;
+    [Setup]
+    procedure SetUp;
+    [TearDown]
+    procedure TearDown;
   published
     procedure PopulateResponseInfoFromExceptionPeer_WhenSignatureDoesNotMatch_Populate;
     procedure PopulateResponseInfoFromExceptionPeer_WithInvalidParameterValue_Populate;
@@ -47,9 +50,9 @@ begin
   ExceptionPeer := EIPHTTPProtocolExceptionPeer.Create(nil, ERROR_MESSAGE, STATUS_MESSAGE, STATUS_CODE);
   try
     FPopulateResponseInfo.FromExceptionPeer(FResponseInfo, ExceptionPeer);
-    CheckEquals(STATUS_CODE, FResponseInfo.StatusCode);
+    Assert.AreEqual(STATUS_CODE, FResponseInfo.StatusCode);
     MsgError := Format('%s - %s (%s)', [STATUS_MESSAGE, 'The request signature we calculated does not match the signature you provided. Check your AWS Secret Access Key and signing method. Consult the service documentation for details.', 'SignatureDoesNotMatch']);
-    CheckEquals(MsgError, FResponseInfo.StatusMessage);
+    Assert.AreEqual(MsgError, FResponseInfo.StatusMessage);
   finally
     ExceptionPeer.Free;
   end;
@@ -74,9 +77,9 @@ begin
   ExceptionPeer := EIPHTTPProtocolExceptionPeer.Create(nil, ERROR_MESSAGE, STATUS_MESSAGE, STATUS_CODE);
   try
     FPopulateResponseInfo.FromExceptionPeer(FResponseInfo, ExceptionPeer);
-    CheckEquals(STATUS_CODE, FResponseInfo.StatusCode);
+    Assert.AreEqual(STATUS_CODE, FResponseInfo.StatusCode);
     MsgError := Format('%s - %s (%s)', [STATUS_MESSAGE, 'Missing final ''@domain''', 'InvalidParameterValue']);
-    CheckEquals(MsgError, FResponseInfo.StatusMessage);
+    Assert.AreEqual(MsgError, FResponseInfo.StatusMessage);
   finally
     ExceptionPeer.Free;
   end;
@@ -97,6 +100,6 @@ begin
 end;
 
 initialization
-   RegisterTest(TPopulateResponseInfoTests.Suite);
+  TDUnitX.RegisterTestFixture(TPopulateResponseInfoTests);
 
 end.
