@@ -85,26 +85,28 @@ begin
   end;
 end;
 
-procedure TAmazonEmailService.PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo;
-  const Peer: IIPHTTP);
+procedure TAmazonEmailService.PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const Peer: IIPHTTP);
+var
+  PopulateResponseInfo: TPopulateResponseInfo;
 begin
-  with TPopulateResponseInfo.Create do
-    try
-      FromPeer(ResponseInfo, Peer);
-    finally
-      Free;
-    end;
+  PopulateResponseInfo := TPopulateResponseInfo.Create;
+  try
+    PopulateResponseInfo.FromPeer(ResponseInfo, Peer);
+  finally
+    PopulateResponseInfo.Free;
+  end;
 end;
 
-procedure TAmazonEmailService.PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo;
-  const E: EIPHTTPProtocolExceptionPeer);
+procedure TAmazonEmailService.PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer);
+var
+  PopulateResponseInfo: TPopulateResponseInfo;
 begin
-  with TPopulateResponseInfo.Create do
-    try
-      FromExceptionPeer(ResponseInfo, E);
-    finally
-      Free;
-    end;
+  PopulateResponseInfo := TPopulateResponseInfo.Create;
+  try
+    PopulateResponseInfo.FromExceptionPeer(ResponseInfo, E);
+  finally
+    PopulateResponseInfo.Free;
+  end;
 end;
 
 procedure TAmazonEmailService.PrepareRequest(const Peer: IIPHTTP);

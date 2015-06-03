@@ -82,7 +82,7 @@ begin
   Recipients := TStringList.Create;
   Recipients.Add('email@mail.com');
   FromAddress := 'email@mail.com';
-  Subject := 'This is the subject line with HTML.';
+  Subject := 'This is the subject line.';
   MessageBody := 'Hello. I hope you are having a good day.';
 
   FBuildQueryParameters.EmailBody := eText;

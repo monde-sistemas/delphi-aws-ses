@@ -36,13 +36,15 @@ begin
 end;
 
 function TPrepareRequestSignature.GetSignature(const StringToSign: string): string;
+var
+  AmazonEmailAuthentication: TAmazonEmailAuthentication;
 begin
-  with TAmazonEmailAuthentication.Create(FConnectionInfo) do
-    try
-      Result := BuildAuthorizationString(StringToSign);
-    finally
-      Free;
-    end;
+  AmazonEmailAuthentication := TAmazonEmailAuthentication.Create(FConnectionInfo);
+  try
+    Result := AmazonEmailAuthentication.BuildAuthorizationString(StringToSign);
+  finally
+    AmazonEmailAuthentication.Free;
+  end;
 end;
 
 end.
