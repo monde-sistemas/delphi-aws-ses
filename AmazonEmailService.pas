@@ -10,13 +10,14 @@ uses
 
 type
   AwsRegions = (USEast, USWest, EUIreland);
+  TEmailBody = (eHTML, eText);
 
   TAmazonEmailService = class
   private
     FAWSRegion: AwsRegions;
     FAWSAccessKey: string;
     FAWSSecretKey: string;
-    FIsHtmlEmail: Boolean;
+    FEmailBody: TEmailBody;
     procedure IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const Peer: IIPHTTP); overload;
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer); overload;
@@ -25,9 +26,9 @@ type
   public
     constructor Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
-      out Response: TCloudResponseInfo; const IsHtmlEmail: Boolean = True): Boolean; overload;
-    function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const IsHtmlEmail: Boolean = True): Boolean; overload;
-    property IsHtmlEmail: Boolean read FIsHtmlEmail write FIsHtmlEmail;
+      out Response: TCloudResponseInfo; const EmailBody: TEmailBody = eHTML): Boolean; overload;
+    function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const EmailBody: TEmailBody = eHTML): Boolean; overload;
+    property EmailBody: TEmailBody read FEmailBody write FEmailBody;
   end;
 
 implementation
@@ -119,11 +120,11 @@ begin
 end;
 
 function TAmazonEmailService.SendMail(const Recipients: TStrings;
-  const FromAddress, Subject, MessageBody: string; const IsHtmlEmail: Boolean): Boolean;
+  const FromAddress, Subject, MessageBody: string; const EmailBody: TEmailBody): Boolean;
 var
   Response: TCloudResponseInfo;
 begin
-  Result := SendMail(Recipients, FromAddress, Subject, MessageBody, Response, IsHtmlEmail);
+  Result := SendMail(Recipients, FromAddress, Subject, MessageBody, Response, EmailBody);
 end;
 
 function TAmazonEmailService.BuildQueryParameters(const Recipients: TStrings;
@@ -131,7 +132,7 @@ function TAmazonEmailService.BuildQueryParameters(const Recipients: TStrings;
 var
   BuildQueryParameters: TBuildQueryParameters;
 begin
-  BuildQueryParameters := TBuildQueryParameters.Create(FIsHtmlEmail);
+  BuildQueryParameters := TBuildQueryParameters.Create(FEmailBody);
   try
     Result := BuildQueryParameters.GetQueryParams(Recipients, From, Subject, MessageBody);
   finally
@@ -140,11 +141,11 @@ begin
 end;
 
 function TAmazonEmailService.SendMail(const Recipients: TStrings; const FromAddress, Subject,
-  MessageBody: string; out Response: TCloudResponseInfo; const IsHtmlEmail: Boolean): Boolean;
+  MessageBody: string; out Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean;
 var
   QueryParameters: TStringStream;
 begin
-  FIsHtmlEmail := IsHtmlEmail;
+  FEmailBody := EmailBody;
 
   CoInitialize(nil);
   try

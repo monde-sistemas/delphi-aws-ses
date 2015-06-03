@@ -21,7 +21,8 @@ type
 implementation
 
 uses
-  Classes;
+  Classes,
+  AmazonEmailService;
 
 procedure TBuildQueryParametersTests.GetQueryParams_WithHTMLBody_EncodedParamsReturned;
 const
@@ -71,8 +72,8 @@ const
                     '&Destination.ToAddresses.member.1=email%40mail.com' +
                     '&Message.Subject.Charset=UTF-8' +
                     '&Message.Subject.Data=This%20is%20the%20subject%20line%20with%20HTML.' +
-                    '&Message.Body.Html.Charset=UTF-8' +
-                    '&Message.Body.Html.Data=Hello.%20I%20hope%20you%20are%20having%20a%20good%20day.';
+                    '&Message.Body.Text.Charset=UTF-8' +
+                    '&Message.Body.Text.Data=Hello.%20I%20hope%20you%20are%20having%20a%20good%20day.';
 var
   Recipients: TStrings;
   FromAddress, Subject, MessageBody: string;
@@ -84,6 +85,7 @@ begin
   Subject := 'This is the subject line with HTML.';
   MessageBody := 'Hello. I hope you are having a good day.';
 
+  FBuildQueryParameters.EmailBody := eText;
   EncodedParams := FBuildQueryParameters.GetQueryParams(Recipients, FromAddress, Subject, MessageBody);
 
   CheckEquals(EXPECTED_RETURN, EncodedParams.DataString);
@@ -92,7 +94,7 @@ end;
 procedure TBuildQueryParametersTests.SetUp;
 begin
   inherited;
-  FBuildQueryParameters := TBuildQueryParameters.Create(True);
+  FBuildQueryParameters := TBuildQueryParameters.Create(eHTML);
 end;
 
 procedure TBuildQueryParametersTests.TearDown;

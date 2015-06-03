@@ -3,16 +3,17 @@ unit BuildQueryParameters;
 interface
 
 uses
-  Classes;
+  Classes,
+  AmazonEmailService;
 
 type
   TBuildQueryParameters = class
   private
-    FIsHtmlEmail: Boolean;
+    FEmailBody: TEmailBody;
   public
-    constructor Create(IsHtmlEmail: Boolean);
+    constructor Create(const EmailBody: TEmailBody);
     function GetQueryParams(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
-    property IsHtmlEmail: Boolean read FIsHtmlEmail write FIsHtmlEmail;
+    property EmailBody: TEmailBody read FEmailBody write FEmailBody;
   end;
 
 implementation
@@ -21,9 +22,9 @@ uses
   SysUtils,
   EncodeQueryParams;
 
-constructor TBuildQueryParameters.Create(IsHtmlEmail: Boolean);
+constructor TBuildQueryParameters.Create(const EmailBody: TEmailBody);
 begin
-  FIsHtmlEmail := IsHtmlEmail;
+  FEmailBody := EmailBody;
 end;
 
 function TBuildQueryParameters.GetQueryParams(const Recipients: TStrings; const From, Subject,
@@ -44,7 +45,7 @@ begin
   Result.WriteString('&Message.Subject.Charset=UTF-8');
   Result.WriteString(Format('&Message.Subject.Data=%s', [TEncodeQueryParams.Encode(Subject)]));
 
-  if FIsHtmlEmail then
+  if FEmailBody = eHTML then
     BodyType := 'Html'
   else
     BodyType := 'Text';
