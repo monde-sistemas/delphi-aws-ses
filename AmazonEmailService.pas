@@ -126,7 +126,12 @@ function TAmazonEmailService.SendMail(const Recipients: TStrings;
 var
   Response: TCloudResponseInfo;
 begin
-  Result := SendMail(Recipients, FromAddress, Subject, MessageBody, Response, EmailBody);
+  try
+    Result := SendMail(Recipients, FromAddress, Subject, MessageBody, Response, EmailBody);
+  finally
+    if Assigned(Response) then
+      Response.Free;
+  end;
 end;
 
 function TAmazonEmailService.BuildQueryParameters(const Recipients: TStrings;
