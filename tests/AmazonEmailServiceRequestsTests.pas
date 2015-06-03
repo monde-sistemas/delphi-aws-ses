@@ -52,11 +52,11 @@ end;
 
 procedure TAmazonEmailServiceRequestsTests.SetUp;
 const
-  AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA';
-  AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K';
+  FAKE_AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA';
+  FAKE_AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K';
 begin
   inherited;
-  FAmazonEmailServiceRequests := TAmazonEmailServiceRequests.Create(AWS_ACCESS_KEY, AWS_SECRET_KEY);
+  FAmazonEmailServiceRequests := TAmazonEmailServiceRequests.Create(FAKE_AWS_ACCESS_KEY, FAKE_AWS_SECRET_KEY);
 end;
 
 procedure TAmazonEmailServiceRequestsTests.TearDown;
