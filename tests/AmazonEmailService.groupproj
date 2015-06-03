@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{23D32098-FE48-49B3-AF28-4F9AA4AE61D8}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="AmazonEmailServiceTests.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="AmazonEmailServiceTests">
+        <MSBuild Projects="AmazonEmailServiceTests.dproj"/>
+    </Target>
+    <Target Name="AmazonEmailServiceTests:Clean">
+        <MSBuild Projects="AmazonEmailServiceTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AmazonEmailServiceTests:Make">
+        <MSBuild Projects="AmazonEmailServiceTests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="AmazonEmailServiceTests"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="AmazonEmailServiceTests:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="AmazonEmailServiceTests:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
