@@ -3,9 +3,6 @@
         <ProjectGuid>{23D32098-FE48-49B3-AF28-4F9AA4AE61D8}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="..\Playground\Playground.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="AmazonEmailServiceTests.dproj">
             <Dependencies/>
         </Projects>
@@ -17,15 +14,6 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="Playground">
-        <MSBuild Projects="..\Playground\Playground.dproj"/>
-    </Target>
-    <Target Name="Playground:Clean">
-        <MSBuild Projects="..\Playground\Playground.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Playground:Make">
-        <MSBuild Projects="..\Playground\Playground.dproj" Targets="Make"/>
-    </Target>
     <Target Name="AmazonEmailServiceTests">
         <MSBuild Projects="AmazonEmailServiceTests.dproj"/>
     </Target>
@@ -36,13 +24,13 @@
         <MSBuild Projects="AmazonEmailServiceTests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Playground;AmazonEmailServiceTests"/>
+        <CallTarget Targets="AmazonEmailServiceTests"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Playground:Clean;AmazonEmailServiceTests:Clean"/>
+        <CallTarget Targets="AmazonEmailServiceTests:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Playground:Make;AmazonEmailServiceTests:Make"/>
+        <CallTarget Targets="AmazonEmailServiceTests:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
