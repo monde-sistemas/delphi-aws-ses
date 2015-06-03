@@ -50,4 +50,3 @@ initialization
   TDUnitX.RegisterTestFixture(TAmazonEmailServiceRegionsTests);
 
 end.
-
