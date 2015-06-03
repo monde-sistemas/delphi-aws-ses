@@ -112,15 +112,6 @@
                 <Source>
                     <Source Name="MainSource">AmazonEmailServiceTests.dpr</Source>
                 </Source>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapFireDAC210.bpl">Embarcadero DataSnap FireDAC</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k210.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp210.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfsbde21.bpl">File C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfsbde21.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfrxbde21.bpl">File C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfrxbde21.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfstee21.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 5\LibD21\dclfrxtee21.bpl">(untitled)</Excluded_Packages>
-                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment>
                 <DeployFile LocalName="Win32\Debug\AmazonEmailServiceTests.exe" Configuration="Debug" Class="ProjectOutput">
