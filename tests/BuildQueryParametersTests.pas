@@ -71,7 +71,7 @@ const
                     '&Source=email%40mail.com' +
                     '&Destination.ToAddresses.member.1=email%40mail.com' +
                     '&Message.Subject.Charset=UTF-8' +
-                    '&Message.Subject.Data=This%20is%20the%20subject%20line%20with%20HTML.' +
+                    '&Message.Subject.Data=This%20is%20the%20subject%20line.' +
                     '&Message.Body.Text.Charset=UTF-8' +
                     '&Message.Body.Text.Data=Hello.%20I%20hope%20you%20are%20having%20a%20good%20day.';
 var
