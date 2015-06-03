@@ -13,7 +13,7 @@ type
 
   TAmazonEmailService = class
   private
-    FAWSRegion: string;
+    FEndpoint: string;
     FAWSAccessKey: string;
     FAWSSecretKey: string;
     FEmailBody: TEmailBody;
@@ -23,7 +23,7 @@ type
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
-    constructor Create(const AWSRegion, AWSAccessKey, AWSSecretKey: string);
+    constructor Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
       out Response: TCloudResponseInfo; const EmailBody: TEmailBody = eHTML): Boolean; overload;
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const EmailBody: TEmailBody = eHTML): Boolean; overload;
@@ -41,9 +41,9 @@ uses
   AmazonEmailServiceRegions,
   BuildQueryParameters;
 
-constructor TAmazonEmailService.Create(const AWSRegion, AWSAccessKey, AWSSecretKey: string);
+constructor TAmazonEmailService.Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
 begin
-  FAWSRegion := TAmazonEmailServiceRegions.DefineServiceURL(AWSRegion);
+  FEndpoint := TAmazonEmailServiceRegions.FormatServiceURL(Endpoint);
   FAWSAccessKey := AWSAccessKey;
   FAWSSecretKey := AWSSecretKey;
 end;
@@ -59,7 +59,7 @@ begin
     PrepareRequest(Peer);
 
     try
-      Peer.DoPost(FAWSRegion, QueryParameters);
+      Peer.DoPost(FEndpoint, QueryParameters);
       PopulateResponseInfo(Response, Peer);
     except
       on E: EIPHTTPProtocolExceptionPeer do

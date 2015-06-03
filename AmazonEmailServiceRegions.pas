@@ -5,7 +5,7 @@ interface
 type
   TAmazonEmailServiceRegions = class
   public
-    class function DefineServiceURL(const AWSRegionEndpoint: string): string;
+    class function FormatServiceURL(const Endpoint: string): string;
   end;
 
 implementation
@@ -15,19 +15,19 @@ uses
   StrUtils,
   SysUtils;
 
-class function TAmazonEmailServiceRegions.DefineServiceURL(const AWSRegionEndpoint: string): string;
+class function TAmazonEmailServiceRegions.FormatServiceURL(const Endpoint: string): string;
 const
   AwsSESOnlySupportHTTPS = 'For security reasons, Amazon SES only support HTTPS requests.';
   Protocol = 'https';
 begin
-  if AnsiContainsStr(AWSRegionEndpoint, '://') then
+  if AnsiContainsStr(Endpoint, '://') then
   begin
-    if not AnsiContainsStr(AWSRegionEndpoint, Protocol + '://') then
+    if not AnsiContainsStr(Endpoint, Protocol + '://') then
       raise EIdHTTPProtocolException.Create(AwsSESOnlySupportHTTPS);
-    Result := AWSRegionEndpoint;
+    Result := Endpoint;
   end
   else
-    Result := Format('%s://%s', [Protocol, AWSRegionEndpoint]);
+    Result := Format('%s://%s', [Protocol, Endpoint]);
 end;
 
 end.
