@@ -36,21 +36,26 @@ var
   BodyType: string;
 begin
   Result := TStringStream.Create(EmptyStr, TEncoding.UTF8);
-  Result.WriteString('Action=' + ACTION);
-  Result.WriteString(Format('&Source=%s', [TEncodeQueryParams.Encode(From)]));
-  for I := 0 to Recipients.Count -1 do
-    Result.WriteString(Format('&Destination.ToAddresses.member.%d=%s',
-      [I+1, TEncodeQueryParams.Encode(Recipients[I])]));
+  try
+    Result.WriteString('Action=' + ACTION);
+    Result.WriteString(Format('&Source=%s', [TEncodeQueryParams.Encode(From)]));
+    for I := 0 to Recipients.Count -1 do
+      Result.WriteString(Format('&Destination.ToAddresses.member.%d=%s',
+        [I+1, TEncodeQueryParams.Encode(Recipients[I])]));
 
-  Result.WriteString('&Message.Subject.Charset=UTF-8');
-  Result.WriteString(Format('&Message.Subject.Data=%s', [TEncodeQueryParams.Encode(Subject)]));
+    Result.WriteString('&Message.Subject.Charset=UTF-8');
+    Result.WriteString(Format('&Message.Subject.Data=%s', [TEncodeQueryParams.Encode(Subject)]));
 
-  if FEmailBody = eHTML then
-    BodyType := 'Html'
-  else
-    BodyType := 'Text';
-  Result.WriteString(Format('&Message.Body.%s.Charset=UTF-8', [BodyType]));
-  Result.WriteString(Format('&Message.Body.%s.Data=%s', [BodyType, TEncodeQueryParams.Encode(MessageBody)]));
+    if FEmailBody = eHTML then
+      BodyType := 'Html'
+    else
+      BodyType := 'Text';
+    Result.WriteString(Format('&Message.Body.%s.Charset=UTF-8', [BodyType]));
+    Result.WriteString(Format('&Message.Body.%s.Data=%s', [BodyType, TEncodeQueryParams.Encode(MessageBody)]));
+  except
+    Result.Free;
+    raise
+  end;
 end;
 
 end.
