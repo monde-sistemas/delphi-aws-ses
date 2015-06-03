@@ -38,7 +38,7 @@ var
   Aux, ErrorNode, MessageNode: IXMLNode;
   ErrorCode, ErrorMsg: string;
 begin
-  if ExceptionPeer.ErrorMessage = EmptyStr then
+  if ExceptionPeer.ErrorMessage.IsEmpty then
     Exit;
 
   XmlDoc := TXMLDocument.Create(nil);
