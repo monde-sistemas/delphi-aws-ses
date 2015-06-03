@@ -44,7 +44,7 @@ begin
     FAmazonEmailServiceRequests.PrepareRequest(Peer);
 
     Assert.AreEqual('application/x-www-form-urlencoded', Peer.GetRequest.ContentType);
-    Assert.AreEqual(230, Integer(Peer.GetRequest.ContentLength));
+    Assert.AreEqual<Int64>(230, Peer.GetRequest.ContentLength);
     Assert.AreEqual(GetCurrentDate(FAmazonEmailServiceRequests.DateRequest), Peer.GetRequest.CustomHeaders.Values['Date']);
     Assert.AreEqual('AWS3-HTTPS AWSAccessKeyId=AKIAJQF6P3QUHRSJPZCA, Algorithm=HmacSHA256, Signature=', Copy(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization'], 1, 80));
     Assert.AreEqual(124, Length(Peer.GetRequest.CustomHeaders.Values['X-Amzn-Authorization']));
