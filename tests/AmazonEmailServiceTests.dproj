@@ -93,7 +93,6 @@
         <DCCReference Include="..\AmazonEmailService.pas"/>
         <DCCReference Include="AmazonEmailServiceRegionsTests.pas"/>
         <DCCReference Include="..\AmazonEmailServiceRequests.pas"/>
-        <DCCReference Include="AmazonEmailServiceHeadersTests.pas"/>
         <DCCReference Include="..\BuildQueryParameters.pas"/>
         <DCCReference Include="BuildQueryParametersTests.pas"/>
         <DCCReference Include="AmazonEmailServiceRequestsTests.pas"/>
