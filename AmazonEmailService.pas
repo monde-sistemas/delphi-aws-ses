@@ -67,12 +67,12 @@ begin
     except
       on E: EIPHTTPProtocolExceptionPeer do
       begin
-	      PopulateResponseInfo(Response, E);
+        PopulateResponseInfo(Response, E);
         raise;
       end;
       on E: Exception do
       begin
-	      PopulateResponseInfo(Response, Peer);
+        PopulateResponseInfo(Response, Peer);
         raise;
       end;
     end;
