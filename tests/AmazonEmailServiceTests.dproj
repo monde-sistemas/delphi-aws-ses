@@ -42,7 +42,6 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <SanitizedProjectName>AmazonEmailServiceTests</SanitizedProjectName>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_Define>CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
         <DCC_DcuOutput>.</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
@@ -70,6 +69,10 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_TYPEINFO_IMPLICITLY_ADDED>false</DCC_TYPEINFO_IMPLICITLY_ADDED>
+        <Manifest_File>None</Manifest_File>
+        <DCC_UnitSearchPath>..\;$(DUNITX);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -82,20 +85,13 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\EncodeQueryParams.pas"/>
-        <DCCReference Include="..\AmazonEmailAuthentication.pas"/>
-        <DCCReference Include="..\PrepareRequestSignature.pas"/>
         <DCCReference Include="PrepareRequestSignatureTests.pas"/>
         <DCCReference Include="EncodeQueryParamsTests.pas"/>
-        <DCCReference Include="..\PopulateResponseInfo.pas"/>
         <DCCReference Include="PopulateResponseInfoTests.pas"/>
-        <DCCReference Include="..\AmazonEmailServiceRegions.pas"/>
-        <DCCReference Include="..\AmazonEmailService.pas"/>
         <DCCReference Include="AmazonEmailServiceRegionsTests.pas"/>
-        <DCCReference Include="..\AmazonEmailServiceRequests.pas"/>
-        <DCCReference Include="..\BuildQueryParameters.pas"/>
         <DCCReference Include="BuildQueryParametersTests.pas"/>
         <DCCReference Include="AmazonEmailServiceRequestsTests.pas"/>
+        <DCCReference Include="DunitXTestRunner.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

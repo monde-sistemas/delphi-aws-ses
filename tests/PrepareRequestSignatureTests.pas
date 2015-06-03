@@ -3,16 +3,19 @@ unit PrepareRequestSignatureTests;
 interface
 
 uses
-  TestFramework,
+  DUnitX.TestFramework,
   PrepareRequestSignature;
 
 type
-  TPrepareRequestSignatureTests = class(TTestCase)
+  [TestFixture]
+  TPrepareRequestSignatureTests = class
   strict private
     FPrepareRequestSignature: TPrepareRequestSignature;
   public
-    procedure SetUp; override;
-    procedure TearDown; override;
+    [Setup]
+    procedure SetUp;
+    [TearDown]
+    procedure TearDown;
   published
     procedure GetSignature_WithCorrectStringToSign_ReturnValidSignature;
   end;
@@ -32,7 +35,7 @@ var
 begin
   StringToSign := 'Tue, 02 Jun 2015 15:01:19 GMT';
   ReturnedSignature := FPrepareRequestSignature.GetSignature(StringToSign);
-  CheckEquals('QufC+soH9Cq9LAnOmTGgAs5dA4cjTptgGZhj3KuhQKs=', ReturnedSignature);
+  Assert.AreEqual('QufC+soH9Cq9LAnOmTGgAs5dA4cjTptgGZhj3KuhQKs=', ReturnedSignature);
 end;
 
 procedure TPrepareRequestSignatureTests.SetUp;
@@ -51,6 +54,6 @@ begin
 end;
 
 initialization
-   RegisterTest(TPrepareRequestSignatureTests.Suite);
+  TDUnitX.RegisterTestFixture(TPrepareRequestSignatureTests);
 
 end.

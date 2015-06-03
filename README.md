@@ -47,16 +47,14 @@ Aws Regions | Region name | API (HTTPS) endpoint
 
 ### Email Body
 
+**Declaration:** `TEmailBody = (eHTML, eText);`
+
 The email body can be sent in the following formats:
 
   * HTML - If the recipient's email client can interpret HTML, the body can include formatted text and hyperlinks
   * Plain text - If the recipient's email client is text-based, the body must not contain any nonprintable characters.
 
 By default, the email will have HTML-enabled. To use text-based email will need you to set the EmailBody parameter values to `eText`.
-
-#### Declaration
-
-`TEmailBody = (eHTML, eText);`
 
 ### Response Info
 
@@ -77,6 +75,13 @@ For example, if the email was sent successfully will be returned:
 Response.StatusCode = 200
 Response.StatusMessage = 'HTTP/1.1 200 OK'
 ```
+
+## Executing the tests
+
+**Dependencies:** [DunitX](https://github.com/VSoftTechnologies/DUnitX/)
+
+  * Clone the [DunitX](https://github.com/VSoftTechnologies/DUnitX/) repository locally
+  * Define a `DUNITX` environment variable, pointing to the DunitX clone directory.
 
 ## Contributing
 
