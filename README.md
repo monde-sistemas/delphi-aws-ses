@@ -13,8 +13,8 @@ Amazon Simple Email (Amazon SES) library for Delphi applications.
 
 ```pascal
 const
-  AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
-  AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
+  FAKE_AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
+  FAKE_AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
 var
   AmazonEmailService: TAmazonEmailService;
   Recipients: TStrings;
@@ -26,7 +26,7 @@ begin
   Subject := 'This is the subject line with HTML.';
   MessageBody := 'Hello. I hope you are having a good day.';
 
-  AmazonEmailService := TAmazonEmailService.Create(USWest, AWS_ACCESS_KEY, AWS_SECRET_KEY);
+  AmazonEmailService := TAmazonEmailService.Create(USWest, FAKE_AWS_ACCESS_KEY, FAKE_AWS_SECRET_KEY);
   try
     AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody);
   finally
@@ -52,7 +52,31 @@ The email body can be sent in the following formats:
   * HTML - If the recipient's email client can interpret HTML, the body can include formatted text and hyperlinks
   * Plain text - If the recipient's email client is text-based, the body must not contain any nonprintable characters.
 
-By default, the email will have HTML-enabled. To use text-based email will need you to set the IsHtmlEmail parameter values to `False`.
+By default, the email will have HTML-enabled. To use text-based email will need you to set the EmailBody parameter values to `eText`.
+
+#### Declaration
+
+`TEmailBody = (eHTML, eText);`
+
+### Response Info
+
+It's also possible to get the response information, setting as a parameter to the SendMail method a variable of type TCloudResponseInfo.
+
+```pascal
+var
+  ResponseInfo: TCloudResponseInfo;
+begin
+  // ...
+  AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody, ResponseInfo);
+  // ...
+```
+
+For example, if the email was sent successfully will be returned:
+
+```
+Response.StatusCode = 200
+Response.StatusMessage = 'HTTP/1.1 200 OK'
+```
 
 ## Contributing
 
