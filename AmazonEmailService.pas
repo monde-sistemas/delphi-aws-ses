@@ -9,12 +9,11 @@ uses
   IPPeerClient;
 
 type
-  AwsRegions = (USEast, USWest, EUIreland);
   TEmailBody = (eHTML, eText);
 
   TAmazonEmailService = class
   private
-    FAWSRegion: AwsRegions;
+    FEndpoint: string;
     FAWSAccessKey: string;
     FAWSSecretKey: string;
     FEmailBody: TEmailBody;
@@ -24,7 +23,7 @@ type
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
-    constructor Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
+    constructor Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
       out Response: TCloudResponseInfo; const EmailBody: TEmailBody = eHTML): Boolean; overload;
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const EmailBody: TEmailBody = eHTML): Boolean; overload;
@@ -42,9 +41,9 @@ uses
   AmazonEmailServiceRegions,
   BuildQueryParameters;
 
-constructor TAmazonEmailService.Create(const AWSRegion: AwsRegions; const AWSAccessKey, AWSSecretKey: string);
+constructor TAmazonEmailService.Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
 begin
-  FAWSRegion := AWSRegion;
+  FEndpoint := TAmazonEmailServiceRegions.FormatServiceURL(Endpoint);
   FAWSAccessKey := AWSAccessKey;
   FAWSSecretKey := AWSSecretKey;
 end;
@@ -52,7 +51,6 @@ end;
 procedure TAmazonEmailService.IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
 var
   Peer: IIPHTTP;
-  ServiceUrl: string;
 begin
   Peer := PeerFactory.CreatePeer('', IIPHTTP, nil) as IIPHTTP;
   try
@@ -61,8 +59,7 @@ begin
     PrepareRequest(Peer);
 
     try
-      ServiceUrl := TAmazonEmailServiceRegions.GetServiceURL(FAWSRegion);
-      Peer.DoPost(ServiceUrl, QueryParameters);
+      Peer.DoPost(FEndpoint, QueryParameters);
       PopulateResponseInfo(Response, Peer);
     except
       on E: EIPHTTPProtocolExceptionPeer do

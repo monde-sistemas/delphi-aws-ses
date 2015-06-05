@@ -13,8 +13,9 @@ Amazon Simple Email (Amazon SES) library for Delphi applications.
 
 ```pascal
 const
-  FAKE_AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
-  FAKE_AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
+  AWS_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com';
+  AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
+  AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
 var
   AmazonEmailService: TAmazonEmailService;
   Recipients: TStrings;
@@ -26,7 +27,7 @@ begin
   Subject := 'This is the subject line with HTML.';
   MessageBody := 'Hello. I hope you are having a good day.';
 
-  AmazonEmailService := TAmazonEmailService.Create(USWest, FAKE_AWS_ACCESS_KEY, FAKE_AWS_SECRET_KEY);
+  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION_ENDPOINT, AWS_ACCESS_KEY, AWS_SECRET_KEY);
   try
     AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody);
   finally
@@ -39,11 +40,11 @@ end;
 
 To reduce network latency, it's a good idea to choose an endpoint closest to your application.
 
-Aws Regions | Region name | API (HTTPS) endpoint
------------- | ------------ | -------------
-`USEast` | US East (N. Virginia) | email.us-east-1.amazonaws.com
-`USWest` | US West (Oregon) | email.us-west-2.amazonaws.com
-`EUIreland` | EU (Ireland) | email.eu-west-1.amazonaws.com
+Region name | API (HTTPS) endpoint
+------------ | -------------
+US East (N. Virginia) | `email.us-east-1.amazonaws.com`
+US West (Oregon) | `email.us-west-2.amazonaws.com`
+EU (Ireland) | `email.eu-west-1.amazonaws.com`
 
 ### Email Body
 
