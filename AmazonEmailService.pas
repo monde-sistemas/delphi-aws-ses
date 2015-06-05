@@ -23,7 +23,9 @@ type
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
-    constructor Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
+    constructor Create(const Endpoint, AWSAccessKey, AWSSecretKey: string); overload;
+    constructor Create; overload;
+
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
       out Response: TCloudResponseInfo; const EmailBody: TEmailBody = eHTML): Boolean; overload;
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string; const EmailBody: TEmailBody = eHTML): Boolean; overload;
@@ -36,16 +38,34 @@ uses
   ActiveX,
   DateUtils,
   SysUtils,
-  PopulateResponseInfo,
-  AmazonEmailServiceRequests,
+  AmazonEmailServiceConfiguration,
   AmazonEmailServiceRegions,
-  BuildQueryParameters;
+  AmazonEmailServiceRequests,
+  BuildQueryParameters,
+  PopulateResponseInfo;
 
 constructor TAmazonEmailService.Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
 begin
   FEndpoint := TAmazonEmailServiceRegions.FormatServiceURL(Endpoint);
   FAWSAccessKey := AWSAccessKey;
   FAWSSecretKey := AWSSecretKey;
+end;
+
+constructor TAmazonEmailService.Create;
+var
+  Configuration: TAmazonEmailServiceConfiguration;
+  Endpoint: string;
+  AccessKey: string;
+  SecretKey: string;
+begin
+  Configuration := TAmazonEmailServiceConfiguration.Create;
+  try
+    Configuration.GetFromEnvironment(Endpoint, AccessKey, SecretKey);
+  finally
+    Configuration.Free;
+  end;
+
+  Create(Endpoint, AccessKey, SecretKey);
 end;
 
 procedure TAmazonEmailService.IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);

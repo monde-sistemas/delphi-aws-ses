@@ -10,7 +10,8 @@ uses
   AmazonEmailServiceRegionsTests in 'AmazonEmailServiceRegionsTests.pas',
   BuildQueryParametersTests in 'BuildQueryParametersTests.pas',
   AmazonEmailServiceRequestsTests in 'AmazonEmailServiceRequestsTests.pas',
-  DunitXTestRunner in 'DunitXTestRunner.pas';
+  DunitXTestRunner in 'DunitXTestRunner.pas',
+  AmazonEmailServiceConfigurationTests in 'AmazonEmailServiceConfigurationTests.pas';
 
 {$R *.RES}
 
