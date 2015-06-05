@@ -49,8 +49,8 @@ var
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_SES_REGION_ENDPOINT, VarEndpoint);
-    SetEnvVarValue(AWS_SES_SECRET_ACCESS_KEY, VarSecretAccessKey);
+    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_SECRET_ACCESS_KEY, VarSecretAccessKey);
 
     Assert.WillRaise(
       procedure
@@ -59,8 +59,8 @@ begin
       end, EArgumentNilException);
 
   finally
-    DeleteEnvVarValue(AWS_SES_REGION_ENDPOINT);
-    DeleteEnvVarValue(AWS_SES_SECRET_ACCESS_KEY);
+    DeleteEnvVarValue(AWS_REGION);
+    DeleteEnvVarValue(AWS_SECRET_ACCESS_KEY);
   end;
 end;
 
@@ -84,8 +84,8 @@ var
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_SES_REGION_ENDPOINT, VarEndpoint);
-    SetEnvVarValue(AWS_SES_ACCESS_KEY_ID, VarAccessKey);
+    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_ACCESS_KEY_ID, VarAccessKey);
 
     Assert.WillRaise(
       procedure
@@ -94,8 +94,8 @@ begin
       end, EArgumentNilException);
 
   finally
-    DeleteEnvVarValue(AWS_SES_REGION_ENDPOINT);
-    DeleteEnvVarValue(AWS_SES_ACCESS_KEY_ID);
+    DeleteEnvVarValue(AWS_REGION);
+    DeleteEnvVarValue(AWS_ACCESS_KEY_ID);
   end;
 end;
 
@@ -106,9 +106,9 @@ var
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_SES_REGION_ENDPOINT, VarEndpoint);
-    SetEnvVarValue(AWS_SES_ACCESS_KEY_ID, VarAccessKey);
-    SetEnvVarValue(AWS_SES_SECRET_ACCESS_KEY, VarSecretAccessKey);
+    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_ACCESS_KEY_ID, VarAccessKey);
+    SetEnvVarValue(AWS_SECRET_ACCESS_KEY, VarSecretAccessKey);
 
     FAmazonEmailServiceConfiguration.GetFromEnvironment(Endpoint, AccessKey, SecretAccessKey);
 
@@ -116,9 +116,9 @@ begin
     Assert.AreEqual(VarAccessKey, AccessKey);
     Assert.AreEqual(VarSecretAccessKey, SecretAccessKey);
   finally
-    DeleteEnvVarValue(AWS_SES_REGION_ENDPOINT);
-    DeleteEnvVarValue(AWS_SES_ACCESS_KEY_ID);
-    DeleteEnvVarValue(AWS_SES_SECRET_ACCESS_KEY);
+    DeleteEnvVarValue(AWS_REGION);
+    DeleteEnvVarValue(AWS_ACCESS_KEY_ID);
+    DeleteEnvVarValue(AWS_SECRET_ACCESS_KEY);
   end;
 end;
 

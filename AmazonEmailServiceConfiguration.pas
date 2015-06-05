@@ -12,9 +12,9 @@ type
   end;
 
 const
-  AWS_SES_REGION_ENDPOINT = 'AWS_SES_REGION_ENDPOINT';
-  AWS_SES_ACCESS_KEY_ID = 'AWS_SES_ACCESS_KEY_ID';
-  AWS_SES_SECRET_ACCESS_KEY = 'AWS_SES_SECRET_ACCESS_KEY';
+  AWS_REGION = 'AWS_REGION';
+  AWS_ACCESS_KEY_ID = 'AWS_ACCESS_KEY_ID';
+  AWS_SECRET_ACCESS_KEY = 'AWS_SECRET_ACCESS_KEY';
 
 implementation
 
@@ -46,13 +46,13 @@ end;
 
 procedure TAmazonEmailServiceConfiguration.GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
 begin
-  AwsSESEndpoint := GetEnvVarValue(AWS_SES_REGION_ENDPOINT);
+  AwsSESEndpoint := GetEnvVarValue(AWS_REGION);
   AssertValue(AwsSESEndpoint, 'Endpoint');
 
-  AwsSESAccessKey := GetEnvVarValue(AWS_SES_ACCESS_KEY_ID);
+  AwsSESAccessKey := GetEnvVarValue(AWS_ACCESS_KEY_ID);
   AssertValue(AwsSESAccessKey, 'Access Key');
 
-  AwsSESSecretKey := GetEnvVarValue(AWS_SES_SECRET_ACCESS_KEY);
+  AwsSESSecretKey := GetEnvVarValue(AWS_SECRET_ACCESS_KEY);
   AssertValue(AwsSESSecretKey, 'Secret Access Key');
 end;
 

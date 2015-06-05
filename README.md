@@ -13,9 +13,9 @@ Amazon Simple Email (Amazon SES) library for Delphi applications.
 
 ### Using with configuration from environment
 
-The better solution is to get configuration from environment variables, and keep the keys out of the code.
+A option is to get configuration from environment variables, and keep the keys out of the code.
 
-It is easy to accomplish this, simply create the three following environment variables: `AWS_SES_REGION_ENDPOINT`, `AWS_SES_ACCESS_KEY_ID` and `AWS_SES_SECRET_ACCESS_KEY`. Internally, the Access Keys and Region Endpoint will be assigned from the environment variables.
+It is easy to accomplish this, simply create the three following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Internally, the Access Keys and Region Endpoint will be assigned from the environment variables.
 
 ```pascal
 var
@@ -48,11 +48,11 @@ You may also pass parameters to the constructor method:
 
 ```pascal
 const
-  AWS_SES_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com';
-  AWS_SES_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
-  AWS_SES_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
+  AWS_REGION = 'email.us-west-2.amazonaws.com';
+  AWS_ACCESS_KEY_ID = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
+  AWS_SECRET_ACCESS_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
   // ...
-  AmazonEmailService := TAmazonEmailService.Create(AWS_SES_REGION_ENDPOINT, AWS_SES_ACCESS_KEY, AWS_SES_SECRET_KEY);
+  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
   // ...
 ```
 
