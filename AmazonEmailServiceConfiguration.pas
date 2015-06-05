@@ -6,6 +6,7 @@ type
   TAmazonEmailServiceConfiguration = class
   private
     function GetEnvVarValue(const VarName: string): string;
+    procedure AssertValue(const VarValue, Description: string);
   public
     procedure GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
   end;
@@ -20,6 +21,12 @@ implementation
 uses
   SysUtils,
   Windows;
+
+procedure TAmazonEmailServiceConfiguration.AssertValue(const VarValue, Description: string);
+begin
+  if VarValue = '' then
+    raise EArgumentNilException.Create(Format('No Amazon SES %s provided.', [Description]));
+end;
 
 function TAmazonEmailServiceConfiguration.GetEnvVarValue(const VarName: string): string;
 var
@@ -40,16 +47,13 @@ end;
 procedure TAmazonEmailServiceConfiguration.GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
 begin
   AwsSESEndpoint := GetEnvVarValue(AWS_SES_REGION_ENDPOINT);
-  if AwsSESEndpoint = '' then
-    raise EArgumentNilException.Create('No Amazon SES Endpoint provided.');
+  AssertValue(AwsSESEndpoint, 'Endpoint');
 
   AwsSESAccessKey := GetEnvVarValue(AWS_SES_ACCESS_KEY_ID);
-  if AwsSESAccessKey = '' then
-    raise EArgumentNilException.Create('No Amazon SES Access Key provided.');
+  AssertValue(AwsSESAccessKey, 'Access Key');
 
   AwsSESSecretKey := GetEnvVarValue(AWS_SES_SECRET_ACCESS_KEY);
-  if AwsSESSecretKey = '' then
-    raise EArgumentNilException.Create('No Amazon SES Secret Access Key provided.');
+  AssertValue(AwsSESSecretKey, 'Secret Access Key');
 end;
 
 end.
