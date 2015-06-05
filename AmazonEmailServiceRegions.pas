@@ -2,32 +2,32 @@ unit AmazonEmailServiceRegions;
 
 interface
 
-uses
-  AmazonEmailService;
-
 type
   TAmazonEmailServiceRegions = class
   public
-    class function GetServiceURL(const Region: AwsRegions): string;
+    class function FormatServiceURL(const Endpoint: string): string;
   end;
 
 implementation
 
 uses
+  IdHTTP,
+  StrUtils,
   SysUtils;
 
-class function TAmazonEmailServiceRegions.GetServiceURL(const Region: AwsRegions): string;
+class function TAmazonEmailServiceRegions.FormatServiceURL(const Endpoint: string): string;
 const
+  AwsSESOnlySupportHTTPS = 'For security reasons, Amazon SES only support HTTPS requests.';
   Protocol = 'https';
-var
-  Endpoint: string;
 begin
-  case Region of
-    USEast: Endpoint := 'email.us-east-1.amazonaws.com';
-    USWest: Endpoint := 'email.us-west-2.amazonaws.com';
-    EUIreland: Endpoint := 'email.eu-west-1.amazonaws.com';
-  end;
-  Result := Format('%s://%s', [Protocol, Endpoint]);
+  if AnsiContainsStr(Endpoint, '://') then
+  begin
+    if not AnsiContainsStr(Endpoint, Protocol + '://') then
+      raise EIdHTTPProtocolException.Create(AwsSESOnlySupportHTTPS);
+    Result := Endpoint;
+  end
+  else
+    Result := Format('%s://%s', [Protocol, Endpoint]);
 end;
 
 end.

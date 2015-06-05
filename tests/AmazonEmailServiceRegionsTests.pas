@@ -10,38 +10,40 @@ type
   [TestFixture]
   TAmazonEmailServiceRegionsTests = class
   published
-    procedure GetServiceURL_ToUSEast_ReturneEndpointEast1;
-    procedure GetServiceURL_ToUSWest_ReturneEndpointWest2;
-    procedure GetServiceURL_ToEUIreland_ReturneEndpointWest1;
+    procedure FormatServiceURL_WithEndpoint_ReturnServiceURL;
+    procedure FormatServiceURL_WithEndpointAndProtocolHTTPS_ReturnServiceURL;
+    procedure FormatServiceURL_WithEndpointAndIncorrectProtocol_EIdHTTPProtocolException;
   end;
 
 implementation
 
 uses
-  AmazonEmailService;
+  IdHTTP,
+  SysUtils;
 
-procedure TAmazonEmailServiceRegionsTests.GetServiceURL_ToEUIreland_ReturneEndpointWest1;
+procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpointAndProtocolHTTPS_ReturnServiceURL;
 var
   ServiceURL: string;
 begin
-  ServiceURL := TAmazonEmailServiceRegions.GetServiceURL(EUIreland);
-  Assert.AreEqual('https://email.eu-west-1.amazonaws.com', ServiceURL);
-end;
-
-procedure TAmazonEmailServiceRegionsTests.GetServiceURL_ToUSEast_ReturneEndpointEast1;
-var
-  ServiceURL: string;
-begin
-  ServiceURL := TAmazonEmailServiceRegions.GetServiceURL(USEast);
+  ServiceURL := TAmazonEmailServiceRegions.FormatServiceURL('https://email.us-east-1.amazonaws.com');
   Assert.AreEqual('https://email.us-east-1.amazonaws.com', ServiceURL);
 end;
 
-procedure TAmazonEmailServiceRegionsTests.GetServiceURL_ToUSWest_ReturneEndpointWest2;
+procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpointAndIncorrectProtocol_EIdHTTPProtocolException;
+begin
+  Assert.WillRaise(
+    procedure
+    begin
+      TAmazonEmailServiceRegions.FormatServiceURL('http://email.us-west-2.amazonaws.com');
+    end, EIdHTTPProtocolException);
+end;
+
+procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpoint_ReturnServiceURL;
 var
   ServiceURL: string;
 begin
-  ServiceURL := TAmazonEmailServiceRegions.GetServiceURL(USWest);
-  Assert.AreEqual('https://email.us-west-2.amazonaws.com', ServiceURL);
+  ServiceURL := TAmazonEmailServiceRegions.FormatServiceURL('email.eu-west-1.amazonaws.com');
+  Assert.AreEqual('https://email.eu-west-1.amazonaws.com', ServiceURL);
 end;
 
 initialization
