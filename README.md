@@ -48,7 +48,7 @@ You may also pass parameters to the constructor method:
 
 ```pascal
 const
-  AWS_REGION = 'email.us-west-2.amazonaws.com';
+  AWS_REGION = 'us-west-2';
   AWS_ACCESS_KEY_ID = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
   AWS_SECRET_ACCESS_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
   // ...

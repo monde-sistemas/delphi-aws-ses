@@ -21,7 +21,7 @@ type
     procedure TearDown;
   published
     procedure GetFromEnvironment_WithSetVars_ReturnEnvVars;
-    procedure GetFromEnvironment_WithoutSetEndpoint_EArgumentNilException;
+    procedure GetFromEnvironment_WithoutSetRegion_EArgumentNilException;
     procedure GetFromEnvironment_WithoutSetAccessKey_EArgumentNilException;
     procedure GetFromEnvironment_WithoutSetSecretAccessKey_EArgumentNilException;
   end;
@@ -33,7 +33,7 @@ uses
   Windows;
 
 const
-  VarEndpoint = 'email.us-east-1.amazonaws.com';
+  VarRegion = 'us-east-1';
   VarAccessKey = 'QWERTYUIOP1234567890';
   VarSecretAccessKey = 'QWERTYUIOP1234567890/*-+.,asdfghjklç';
 
@@ -44,18 +44,18 @@ end;
 
 procedure TAmazonEmailServiceConfigurationTests.GetFromEnvironment_WithoutSetAccessKey_EArgumentNilException;
 var
-  Endpoint: string;
+  Region: string;
   AccessKey: string;
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_REGION, VarRegion);
     SetEnvVarValue(AWS_SECRET_ACCESS_KEY, VarSecretAccessKey);
 
     Assert.WillRaise(
       procedure
       begin
-        FAmazonEmailServiceConfiguration.GetFromEnvironment(Endpoint, AccessKey, SecretAccessKey)
+        FAmazonEmailServiceConfiguration.GetFromEnvironment(Region, AccessKey, SecretAccessKey)
       end, EArgumentNilException);
 
   finally
@@ -64,33 +64,33 @@ begin
   end;
 end;
 
-procedure TAmazonEmailServiceConfigurationTests.GetFromEnvironment_WithoutSetEndpoint_EArgumentNilException;
+procedure TAmazonEmailServiceConfigurationTests.GetFromEnvironment_WithoutSetRegion_EArgumentNilException;
 var
-  Endpoint: string;
+  Region: string;
   AccessKey: string;
   SecretAccessKey: string;
 begin
   Assert.WillRaise(
     procedure
     begin
-      FAmazonEmailServiceConfiguration.GetFromEnvironment(Endpoint, AccessKey, SecretAccessKey)
+      FAmazonEmailServiceConfiguration.GetFromEnvironment(Region, AccessKey, SecretAccessKey)
     end, EArgumentNilException);
 end;
 
 procedure TAmazonEmailServiceConfigurationTests.GetFromEnvironment_WithoutSetSecretAccessKey_EArgumentNilException;
 var
-  Endpoint: string;
+  Region: string;
   AccessKey: string;
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_REGION, VarRegion);
     SetEnvVarValue(AWS_ACCESS_KEY_ID, VarAccessKey);
 
     Assert.WillRaise(
       procedure
       begin
-        FAmazonEmailServiceConfiguration.GetFromEnvironment(Endpoint, AccessKey, SecretAccessKey)
+        FAmazonEmailServiceConfiguration.GetFromEnvironment(Region, AccessKey, SecretAccessKey)
       end, EArgumentNilException);
 
   finally
@@ -101,18 +101,18 @@ end;
 
 procedure TAmazonEmailServiceConfigurationTests.GetFromEnvironment_WithSetVars_ReturnEnvVars;
 var
-  Endpoint: string;
+  Region: string;
   AccessKey: string;
   SecretAccessKey: string;
 begin
   try
-    SetEnvVarValue(AWS_REGION, VarEndpoint);
+    SetEnvVarValue(AWS_REGION, VarRegion);
     SetEnvVarValue(AWS_ACCESS_KEY_ID, VarAccessKey);
     SetEnvVarValue(AWS_SECRET_ACCESS_KEY, VarSecretAccessKey);
 
-    FAmazonEmailServiceConfiguration.GetFromEnvironment(Endpoint, AccessKey, SecretAccessKey);
+    FAmazonEmailServiceConfiguration.GetFromEnvironment(Region, AccessKey, SecretAccessKey);
 
-    Assert.AreEqual(VarEndpoint, Endpoint);
+    Assert.AreEqual(VarRegion, Region);
     Assert.AreEqual(VarAccessKey, AccessKey);
     Assert.AreEqual(VarSecretAccessKey, SecretAccessKey);
   finally

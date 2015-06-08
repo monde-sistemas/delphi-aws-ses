@@ -10,39 +10,19 @@ type
   [TestFixture]
   TAmazonEmailServiceRegionsTests = class
   published
-    procedure FormatServiceURL_WithEndpoint_ReturnServiceURL;
-    procedure FormatServiceURL_WithEndpointAndProtocolHTTPS_ReturnServiceURL;
-    procedure FormatServiceURL_WithEndpointAndIncorrectProtocol_EIdHTTPProtocolException;
+    procedure FormatServiceURL_WithRegion_ReturnServiceURL;
   end;
 
 implementation
 
 uses
-  IdHTTP,
   SysUtils;
 
-procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpointAndProtocolHTTPS_ReturnServiceURL;
+procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithRegion_ReturnServiceURL;
 var
   ServiceURL: string;
 begin
-  ServiceURL := TAmazonEmailServiceRegions.FormatServiceURL('https://email.us-east-1.amazonaws.com');
-  Assert.AreEqual('https://email.us-east-1.amazonaws.com', ServiceURL);
-end;
-
-procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpointAndIncorrectProtocol_EIdHTTPProtocolException;
-begin
-  Assert.WillRaise(
-    procedure
-    begin
-      TAmazonEmailServiceRegions.FormatServiceURL('http://email.us-west-2.amazonaws.com');
-    end, EIdHTTPProtocolException);
-end;
-
-procedure TAmazonEmailServiceRegionsTests.FormatServiceURL_WithEndpoint_ReturnServiceURL;
-var
-  ServiceURL: string;
-begin
-  ServiceURL := TAmazonEmailServiceRegions.FormatServiceURL('email.eu-west-1.amazonaws.com');
+  ServiceURL := TAmazonEmailServiceRegions.FormatServiceURL('eu-west-1');
   Assert.AreEqual('https://email.eu-west-1.amazonaws.com', ServiceURL);
 end;
 

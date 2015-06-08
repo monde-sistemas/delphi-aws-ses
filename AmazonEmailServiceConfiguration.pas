@@ -8,7 +8,7 @@ type
     function GetEnvVarValue(const VarName: string): string;
     procedure AssertValue(const VarValue, Description: string);
   public
-    procedure GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
+    procedure GetFromEnvironment(var Region, AccessKey, SecretKey: string);
   end;
 
 const
@@ -25,7 +25,7 @@ uses
 procedure TAmazonEmailServiceConfiguration.AssertValue(const VarValue, Description: string);
 begin
   if VarValue = '' then
-    raise EArgumentNilException.Create(Format('No Amazon SES %s provided.', [Description]));
+    raise EArgumentNilException.Create(Format('No Amazon %s provided.', [Description]));
 end;
 
 function TAmazonEmailServiceConfiguration.GetEnvVarValue(const VarName: string): string;
@@ -44,16 +44,16 @@ begin
     Result := '';
 end;
 
-procedure TAmazonEmailServiceConfiguration.GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
+procedure TAmazonEmailServiceConfiguration.GetFromEnvironment(var Region, AccessKey, SecretKey: string);
 begin
-  AwsSESEndpoint := GetEnvVarValue(AWS_REGION);
-  AssertValue(AwsSESEndpoint, 'Region Endpoint');
+  Region := GetEnvVarValue(AWS_REGION);
+  AssertValue(Region, 'Region');
 
-  AwsSESAccessKey := GetEnvVarValue(AWS_ACCESS_KEY_ID);
-  AssertValue(AwsSESAccessKey, 'Access Key');
+  AccessKey := GetEnvVarValue(AWS_ACCESS_KEY_ID);
+  AssertValue(AccessKey, 'Access Key');
 
-  AwsSESSecretKey := GetEnvVarValue(AWS_SECRET_ACCESS_KEY);
-  AssertValue(AwsSESSecretKey, 'Secret Access Key');
+  SecretKey := GetEnvVarValue(AWS_SECRET_ACCESS_KEY);
+  AssertValue(SecretKey, 'Secret Access Key');
 end;
 
 end.

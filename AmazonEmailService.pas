@@ -13,7 +13,7 @@ type
 
   TAmazonEmailService = class
   private
-    FEndpoint: string;
+    FRegion: string;
     FAWSAccessKey: string;
     FAWSSecretKey: string;
     FEmailBody: TEmailBody;
@@ -23,7 +23,7 @@ type
     function BuildQueryParameters(const Recipients: TStrings; const From, Subject, MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
-    constructor Create(const Endpoint, AWSAccessKey, AWSSecretKey: string); overload;
+    constructor Create(const Region, AWSAccessKey, AWSSecretKey: string); overload;
     constructor Create; overload;
 
     function SendMail(const Recipients: TStrings; const FromAddress, Subject, MessageBody: string;
@@ -44,9 +44,9 @@ uses
   BuildQueryParameters,
   PopulateResponseInfo;
 
-constructor TAmazonEmailService.Create(const Endpoint, AWSAccessKey, AWSSecretKey: string);
+constructor TAmazonEmailService.Create(const Region, AWSAccessKey, AWSSecretKey: string);
 begin
-  FEndpoint := TAmazonEmailServiceRegions.FormatServiceURL(Endpoint);
+  FRegion := TAmazonEmailServiceRegions.FormatServiceURL(Region);
   FAWSAccessKey := AWSAccessKey;
   FAWSSecretKey := AWSSecretKey;
 end;
@@ -54,18 +54,18 @@ end;
 constructor TAmazonEmailService.Create;
 var
   Configuration: TAmazonEmailServiceConfiguration;
-  Endpoint: string;
+  Region: string;
   AccessKey: string;
   SecretKey: string;
 begin
   Configuration := TAmazonEmailServiceConfiguration.Create;
   try
-    Configuration.GetFromEnvironment(Endpoint, AccessKey, SecretKey);
+    Configuration.GetFromEnvironment(Region, AccessKey, SecretKey);
   finally
     Configuration.Free;
   end;
 
-  Create(Endpoint, AccessKey, SecretKey);
+  Create(Region, AccessKey, SecretKey);
 end;
 
 procedure TAmazonEmailService.IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
@@ -79,7 +79,7 @@ begin
     PrepareRequest(Peer);
 
     try
-      Peer.DoPost(FEndpoint, QueryParameters);
+      Peer.DoPost(FRegion, QueryParameters);
       PopulateResponseInfo(Response, Peer);
     except
       on E: EIPHTTPProtocolExceptionPeer do
