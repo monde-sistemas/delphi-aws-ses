@@ -11,40 +11,50 @@ Amazon Simple Email (Amazon SES) library for Delphi applications.
 
 ## Using
 
+### Using with configuration from environment
+
+A option is to get configuration from environment variables, and keep the keys out of the code.
+
+It is easy to accomplish this, simply create the three following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Internally, the Access Keys and Region Endpoint will be assigned from the environment variables.
+
 ```pascal
-const
-  AWS_REGION_ENDPOINT = 'email.us-west-2.amazonaws.com';
-  AWS_ACCESS_KEY = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
-  AWS_SECRET_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
 var
   AmazonEmailService: TAmazonEmailService;
   Recipients: TStrings;
   FromAddress, Subject, MessageBody: string;
 begin
   Recipients := TStringList.Create;
-  Recipients.Add('email@mail.com');
-  FromAddress := 'email@mail.com';
-  Subject := 'This is the subject line with HTML.';
-  MessageBody := 'Hello. I hope you are having a good day.';
-
-  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION_ENDPOINT, AWS_ACCESS_KEY, AWS_SECRET_KEY);
   try
-    AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody);
+    Recipients.Add('email@mail.com');
+    FromAddress := 'email@mail.com';
+    Subject := 'This is the subject line with HTML.';
+    MessageBody := 'Hello. I hope you are having a good day.';
+
+    AmazonEmailService := TAmazonEmailService.Create;
+    try
+      AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody);
+    finally
+      AmazonEmailService.Free;
+    end;
   finally
-    AmazonEmailService.Free;
+    Recipients.Free;
   end;
 end;
 ```
 
-### Aws Regions
+### Using with method parameters
 
-To reduce network latency, it's a good idea to choose an endpoint closest to your application.
+You may also pass parameters to the constructor method:
 
-Region name | API (HTTPS) endpoint
------------- | -------------
-US East (N. Virginia) | `email.us-east-1.amazonaws.com`
-US West (Oregon) | `email.us-west-2.amazonaws.com`
-EU (Ireland) | `email.eu-west-1.amazonaws.com`
+```pascal
+const
+  AWS_REGION = 'us-west-2';
+  AWS_ACCESS_KEY_ID = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
+  AWS_SECRET_ACCESS_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
+  // ...
+  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+  // ...
+```
 
 ### Email Body
 
