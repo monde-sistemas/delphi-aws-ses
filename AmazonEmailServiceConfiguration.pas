@@ -47,7 +47,7 @@ end;
 procedure TAmazonEmailServiceConfiguration.GetFromEnvironment(var AwsSESEndpoint, AwsSESAccessKey, AwsSESSecretKey: string);
 begin
   AwsSESEndpoint := GetEnvVarValue(AWS_REGION);
-  AssertValue(AwsSESEndpoint, 'Endpoint');
+  AssertValue(AwsSESEndpoint, 'Region Endpoint');
 
   AwsSESAccessKey := GetEnvVarValue(AWS_ACCESS_KEY_ID);
   AssertValue(AwsSESAccessKey, 'Access Key');
