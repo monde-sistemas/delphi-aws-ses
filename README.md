@@ -56,16 +56,6 @@ const
   // ...
 ```
 
-### Aws Regions
-
-To reduce network latency, it's a good idea to choose an endpoint closest to your application.
-
-Region name | API (HTTPS) endpoint
------------- | -------------
-US East (N. Virginia) | `email.us-east-1.amazonaws.com`
-US West (Oregon) | `email.us-west-2.amazonaws.com`
-EU (Ireland) | `email.eu-west-1.amazonaws.com`
-
 ### Email Body
 
 **Declaration:** `TEmailBody = (eHTML, eText);`
