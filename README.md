@@ -1,21 +1,10 @@
 # delphi-aws-ses
 
-Amazon Simple Email (Amazon SES) library for Delphi applications.
-
-[Amazon SES](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/Welcome.html) is an outbound-only email-sending service that provides an easy, cost-effective way for you to send email.
-
-## Features
-
-  * Send emails through Amazon SES
-  * The email body can be sent in the formats HTML and Plain Text
+Amazon Simple Email Service ([AWS SES](http://aws.amazon.com/ses)) library for Delphi applications.
 
 ## Using
 
-### Using with configuration from environment
-
-A option is to get configuration from environment variables, and keep the keys out of the code.
-
-It is easy to accomplish this, simply create the three following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Internally, the Access Keys and Region Endpoint will be assigned from the environment variables.
+If you call the `TAmazonEmailService.Create` constructor without arguments the library will look for the following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. 
 
 ```pascal
 var
@@ -42,15 +31,9 @@ begin
 end;
 ```
 
-### Using with method parameters
-
 You may also pass parameters to the constructor method:
 
 ```pascal
-const
-  AWS_REGION = 'us-west-2';
-  AWS_ACCESS_KEY_ID = 'AKIAJQF6P3QUHRSJPZCA_EXAMPLE';
-  AWS_SECRET_ACCESS_KEY = 'BeVo2wwiGIg25t4jKxsqmzS3ljSxrdZfl/SJ+32K_EXAMPLE';
   // ...
   AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
   // ...
@@ -82,17 +65,17 @@ begin
 
 For example, if the email was sent successfully will be returned:
 
-```
+```pascal
 Response.StatusCode = 200
 Response.StatusMessage = 'HTTP/1.1 200 OK'
 ```
 
 ## Executing the tests
 
-**Dependencies:** [DunitX](https://github.com/VSoftTechnologies/DUnitX/)
+You need DUnitX do run the tests.
 
-  * Clone the [DunitX](https://github.com/VSoftTechnologies/DUnitX/) repository locally
-  * Define a `DUNITX` environment variable, pointing to the DunitX clone directory.
+  * Clone the [DUnitX](https://github.com/VSoftTechnologies/DUnitX/) repository locally
+  * Define a `DUNITX` environment variable, pointing to the DUnitX clone directory.
 
 ## Contributing
 
