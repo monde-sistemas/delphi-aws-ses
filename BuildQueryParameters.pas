@@ -33,15 +33,18 @@ const
   ACTION = 'SendEmail';
 var
   I: Integer;
-  BodyType: string;
+  BodyType, Recipient: string;
 begin
   Result := TStringStream.Create(EmptyStr, TEncoding.UTF8);
   try
     Result.WriteString('Action=' + ACTION);
     Result.WriteString(Format('&Source=%s', [TEncodeQueryParams.Encode(From)]));
+
     for I := 0 to Recipients.Count -1 do
-      Result.WriteString(Format('&Destination.ToAddresses.member.%d=%s',
-        [I+1, TEncodeQueryParams.Encode(Recipients[I])]));
+    begin
+      Recipient := Format('&Destination.ToAddresses.member.%d=%s', [I+1, TEncodeQueryParams.Encode(Recipients[I])]);
+      Result.WriteString(Recipient);
+    end;
 
     Result.WriteString('&Message.Subject.Charset=UTF-8');
     Result.WriteString(Format('&Message.Subject.Data=%s', [TEncodeQueryParams.Encode(Subject)]));

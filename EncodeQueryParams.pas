@@ -5,7 +5,7 @@ interface
 type
   TEncodeQueryParams = class
   public
-    class function Encode(const Str: string): string; overload;
+    class function Encode(const Str: string): string; static;
   end;
 
 implementation
@@ -19,6 +19,7 @@ const
 var
   I: Integer;
 begin
+  Result := '';
   for I := 1 to Length(Str) do
     if not CharInSet(Str[I], SAFE_CHARS) then
       Result := Result + '%'+ IntToHex(Ord(Str[I]),2)
