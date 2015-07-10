@@ -21,12 +21,30 @@ type
   published
     procedure GetQueryParams_WithHTMLBody_EncodedParamsReturned;
     procedure GetQueryParams_WithTextBody_EncodedParamsReturned;
+    procedure GetQueryParams_MutipleRecipients_RecipientsAdded;
   end;
 
 implementation
 
 uses
   AmazonEmailService;
+
+procedure TBuildQueryParametersTests.GetQueryParams_MutipleRecipients_RecipientsAdded;
+const
+  ExpectedRecipients = '&Destination.ToAddresses.member.1=emailFrom%40mail.com' +
+                    '&Destination.ToAddresses.member.2=emailFrom2%40mail.com';
+var
+  EncodedParams: TStringStream;
+begin
+  FRecipients.Add('emailFrom2@mail.com');
+
+  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, 'email@email.com', '', '');
+  try
+    Assert.Contains(EncodedParams.DataString, ExpectedRecipients);
+  finally
+    EncodedParams.Free;
+  end;
+end;
 
 procedure TBuildQueryParametersTests.GetQueryParams_WithHTMLBody_EncodedParamsReturned;
 const
