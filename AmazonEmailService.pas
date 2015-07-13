@@ -83,15 +83,9 @@ begin
       PopulateResponseInfo(Response, Peer);
     except
       on E: EIPHTTPProtocolExceptionPeer do
-      begin
-        PopulateResponseInfo(Response, E);
+        PopulateResponseInfo(Response, E)
+      else
         raise;
-      end;
-      on E: Exception do
-      begin
-        PopulateResponseInfo(Response, Peer);
-        raise;
-      end;
     end;
   finally
     if Assigned(Peer) then
