@@ -12,11 +12,16 @@ type
   published
     procedure Encode_Email_ReturnValidEncodedEmail;
     procedure Encode_Subject_ReturnValidEncodedSubject;
+    procedure Encode_AccentedChars_ReturnEncodedAsUTF8;
+    procedure Encode_LineBreak_ReturnEncodedCorrectly;
   end;
 
 implementation
 
-{ TEncodeQueryParamsTests }
+procedure TEncodeQueryParamsTests.Encode_AccentedChars_ReturnEncodedAsUTF8;
+begin
+  Assert.AreEqual('Voc%C3%AA%20%C3%A9%20d%2B', TEncodeQueryParams.Encode('Você é d+'))
+end;
 
 procedure TEncodeQueryParamsTests.Encode_Email_ReturnValidEncodedEmail;
 var
@@ -24,6 +29,11 @@ var
 begin
   EncodedStr := TEncodeQueryParams.Encode('name@gmail.com');
   Assert.AreEqual('name%40gmail.com', EncodedStr);
+end;
+
+procedure TEncodeQueryParamsTests.Encode_LineBreak_ReturnEncodedCorrectly;
+begin
+Assert.AreEqual('%0D%0A', TEncodeQueryParams.Encode(sLineBreak));
 end;
 
 procedure TEncodeQueryParamsTests.Encode_Subject_ReturnValidEncodedSubject;
