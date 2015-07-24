@@ -6,34 +6,30 @@ Amazon Simple Email Service ([AWS SES](http://aws.amazon.com/ses)) library for D
 
 If you call the `TAmazonEmailService.Create` constructor without arguments the library will look for the following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. 
 
-```pascal
+```Delphi
 var
   AmazonEmailService: TAmazonEmailService;
-  Recipients: TStrings;
-  FromAddress, Subject, MessageBody: string;
+  Recipients: TArray<string>;
+  FromName, FromAddress, Subject, MessageBody: string;
 begin
-  Recipients := TStringList.Create;
-  try
-    Recipients.Add('email@mail.com');
-    FromAddress := 'email@mail.com';
-    Subject := 'This is the subject line with HTML.';
-    MessageBody := 'Hello. I hope you are having a good day.';
+  Recipients := TArray<string>.Create('email@example.com', 'email2@example.com');
+  FromName := 'John Doe'
+  FromAddress := 'email@mail.com';
+  Subject := 'This is the subject line with HTML.';
+  MessageBody := 'Hello. I hope you are having a good day.';
 
-    AmazonEmailService := TAmazonEmailService.Create;
-    try
-      AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody);
-    finally
-      AmazonEmailService.Free;
-    end;
+  AmazonEmailService := TAmazonEmailService.Create;
+  try
+    AmazonEmailService.SendMail(Recipients, FromName, FromAddress, Subject, MessageBody);
   finally
-    Recipients.Free;
+    AmazonEmailService.Free;
   end;
 end;
 ```
 
 You may also pass parameters to the constructor method:
 
-```pascal
+```Delphi
   // ...
   AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
   // ...
@@ -54,7 +50,7 @@ By default, the email will have HTML-enabled. To use text-based email will need 
 
 It's also possible to get the response information, setting as a parameter to the SendMail method a variable of type TCloudResponseInfo.
 
-```pascal
+```Delphi
 var
   ResponseInfo: TCloudResponseInfo;
 begin
@@ -65,7 +61,7 @@ begin
 
 For example, if the email was sent successfully will be returned:
 
-```pascal
+```Delphi
 Response.StatusCode = 200
 Response.StatusMessage = 'HTTP/1.1 200 OK'
 ```
