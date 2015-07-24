@@ -20,17 +20,17 @@ type
     procedure IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const Peer: IIPHTTP); overload;
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer); overload;
-    function BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const From, Subject, MessageBody: string):
-        TStringStream;
+    function BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
+        MessageBody: string): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
     constructor Create(const Region, AWSAccessKey, AWSSecretKey: string); overload;
     constructor Create; overload;
 
-    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromAddress, Subject, MessageBody: string; out
-        Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean; overload;
-    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromAddress, Subject, MessageBody: string; const
-        EmailBody: TEmailBody): Boolean; overload;
+    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject, MessageBody: string;
+        out Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean; overload;
+    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject, MessageBody: string;
+        const EmailBody: TEmailBody): Boolean; overload;
     property EmailBody: TEmailBody read FEmailBody write FEmailBody;
   end;
 
@@ -134,33 +134,33 @@ begin
   end;
 end;
 
-function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromAddress, Subject,
+function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
     MessageBody: string; const EmailBody: TEmailBody): Boolean;
 var
   Response: TCloudResponseInfo;
 begin
   try
-    Result := SendMail(Recipients, ReplyTo, FromAddress, Subject, MessageBody, Response, EmailBody);
+    Result := SendMail(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody, Response, EmailBody);
   finally
     if Assigned(Response) then
       Response.Free;
   end;
 end;
 
-function TAmazonEmailService.BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const From, Subject,
-    MessageBody: string): TStringStream;
+function TAmazonEmailService.BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const FromName,
+    FromAddress, Subject, MessageBody: string): TStringStream;
 var
   BuildQueryParameters: TBuildQueryParameters;
 begin
   BuildQueryParameters := TBuildQueryParameters.Create(FEmailBody);
   try
-    Result := BuildQueryParameters.GetQueryParams(Recipients, ReplyTo, From, Subject, MessageBody);
+    Result := BuildQueryParameters.GetQueryParams(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody);
   finally
     BuildQueryParameters.Free;
   end;
 end;
 
-function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromAddress, Subject,
+function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
     MessageBody: string; out Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean;
 var
   QueryParameters: TStringStream;
@@ -171,7 +171,7 @@ begin
   try
     Response := TCloudResponseInfo.Create;
 
-    QueryParameters := BuildQueryParameters(Recipients, ReplyTo, FromAddress, Subject, MessageBody);
+    QueryParameters := BuildQueryParameters(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody);
     try
       IssueRequest(QueryParameters, Response);
       Result := (Response <> nil) and (Response.StatusCode = 200);

@@ -12,10 +12,10 @@ type
     FEmailBody: TEmailBody;
   public
     constructor Create(const EmailBody: TEmailBody);
-    function GetQueryParams(const Recipients: TArray<string>; const From, Subject, MessageBody: string): TStringStream;
-        overload;
-    function GetQueryParams(const Recipients, ReplyTo: TArray<string>; const From, Subject, MessageBody: string):
+    function GetQueryParams(const Recipients: TArray<string>; const FromName, FromAddress, Subject, MessageBody: string):
         TStringStream; overload;
+    function GetQueryParams(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject, MessageBody:
+        string): TStringStream; overload;
     property EmailBody: TEmailBody read FEmailBody write FEmailBody;
   end;
 
@@ -23,31 +23,33 @@ implementation
 
 uses
   SysUtils,
-  EncodeQueryParams;
+  EncodeQueryParams,
+  System.NetEncoding;
 
 constructor TBuildQueryParameters.Create(const EmailBody: TEmailBody);
 begin
   FEmailBody := EmailBody;
 end;
 
-function TBuildQueryParameters.GetQueryParams(const Recipients: TArray<string>; const From, Subject, MessageBody:
-    string): TStringStream;
+function TBuildQueryParameters.GetQueryParams(const Recipients: TArray<string>; const FromName, FromAddress, Subject,
+    MessageBody: string): TStringStream;
 begin
-  Result := GetQueryParams(Recipients, nil, From, Subject, MessageBody);
+  Result := GetQueryParams(Recipients, nil, FromName, FromAddress, Subject, MessageBody);
 end;
 
-function TBuildQueryParameters.GetQueryParams(const Recipients, ReplyTo: TArray<string>; const From, Subject,
-    MessageBody: string): TStringStream;
+function TBuildQueryParameters.GetQueryParams(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress,
+    Subject, MessageBody: string): TStringStream;
 const
   ACTION = 'SendEmail';
 var
   I: Integer;
-  BodyType: string;
+  BodyType, Source: string;
 begin
   Result := TStringStream.Create(EmptyStr, TEncoding.UTF8);
   try
     Result.WriteString('Action=' + ACTION);
-    Result.WriteString(Format('&Source=%s', [TEncodeQueryParams.Encode(From)]));
+    Source := Format('=?utf-8?B?%s?= <%s>', [TNetEncoding.Base64.Encode(FromName), FromAddress]);
+    Result.WriteString(Format('&Source=%s', [TEncodeQueryParams.Encode(Source)]));
 
     for I := Low(Recipients) to High(Recipients) do
       Result.WriteString(Format('&Destination.ToAddresses.member.%d=%s', [I+1, TEncodeQueryParams.Encode(Recipients[I])]));
