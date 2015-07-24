@@ -4,47 +4,49 @@ Amazon Simple Email Service ([AWS SES](http://aws.amazon.com/ses)) library for D
 
 ## Using
 
-If you call the `TAmazonEmailService.Create` constructor without arguments the library will look for the following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. 
+If you call the class method `TAmazonEmailService.SendMail` the library will look for the following environment variables: `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. 
+
+```Delphi
+var
+  EmailMessage: TEmailMessage;
+begin
+  EmailMessage.Recipients := TArray<string>.Create('email@example.com', 'email2@example.com');
+  EmailMessage.FromName := 'John Doe'
+  EmailMessage.FromAddress := 'email@mail.com';
+  EmailMessage.Subject := 'This is the subject line with HTML.';
+  EmailMessage.Body := 'Hello. I hope you are having a good day.';
+
+  TAmazonEmailService.SendMail(EmailMessage);
+end;
+```
+
+
+You may also manually instantiate the class and pass parameters to the constructor method:
 
 ```Delphi
 var
   AmazonEmailService: TAmazonEmailService;
-  Recipients: TArray<string>;
-  FromName, FromAddress, Subject, MessageBody: string;
 begin
-  Recipients := TArray<string>.Create('email@example.com', 'email2@example.com');
-  FromName := 'John Doe'
-  FromAddress := 'email@mail.com';
-  Subject := 'This is the subject line with HTML.';
-  MessageBody := 'Hello. I hope you are having a good day.';
-
-  AmazonEmailService := TAmazonEmailService.Create;
+  // ...
+  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
   try
-    AmazonEmailService.SendMail(Recipients, FromName, FromAddress, Subject, MessageBody);
+    AmazonEmailService.Send(EmailMessage);    
   finally
     AmazonEmailService.Free;
   end;
-end;
+  
 ```
 
-You may also pass parameters to the constructor method:
+### Body Type
 
-```Delphi
-  // ...
-  AmazonEmailService := TAmazonEmailService.Create(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
-  // ...
-```
-
-### Email Body
-
-**Declaration:** `TEmailBody = (eHTML, eText);`
+**Declaration:** `TBodyType = (btHTML, btText);`
 
 The email body can be sent in the following formats:
 
   * HTML - If the recipient's email client can interpret HTML, the body can include formatted text and hyperlinks
   * Plain text - If the recipient's email client is text-based, the body must not contain any nonprintable characters.
 
-By default, the email will have HTML-enabled. To use text-based email will need you to set the EmailBody parameter values to `eText`.
+By default, the email will have HTML-enabled. To use text-based email will need you to set the EmailBody parameter values to `btText`.
 
 ### Response Info
 
@@ -55,7 +57,7 @@ var
   ResponseInfo: TCloudResponseInfo;
 begin
   // ...
-  AmazonEmailService.SendMail(Recipients, FromAddress, Subject, MessageBody, ResponseInfo);
+  TAmazonEmailService.SendMail(EmailMessage, ResponseInfo);
   // ...
 ```
 

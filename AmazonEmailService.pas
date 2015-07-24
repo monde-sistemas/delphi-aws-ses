@@ -6,32 +6,27 @@ uses
   IPPeerAPI,
   Data.Cloud.CloudAPI,
   IPPeerClient,
-  System.Classes;
+  System.Classes,
+  AmazonEmailMessage;
 
 type
-  TEmailBody = (eHTML, eText);
-
   TAmazonEmailService = class
   private
     FRegion: string;
     FAWSAccessKey: string;
     FAWSSecretKey: string;
-    FEmailBody: TEmailBody;
     procedure IssueRequest(const QueryParameters: TStringStream; out Response: TCloudResponseInfo);
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const Peer: IIPHTTP); overload;
     procedure PopulateResponseInfo(const ResponseInfo: TCloudResponseInfo; const E: EIPHTTPProtocolExceptionPeer); overload;
-    function BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
-        MessageBody: string): TStringStream;
+    function BuildQueryParameters(const EmailMessage: TEmailMessage): TStringStream;
     procedure PrepareRequest(const Peer: IIPHTTP);
   public
     constructor Create(const Region, AWSAccessKey, AWSSecretKey: string); overload;
     constructor Create; overload;
+    function Send(const EmailMessage: TEmailMessage; out Response: TCloudResponseInfo): Boolean;
 
-    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject, MessageBody: string;
-        out Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean; overload;
-    function SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject, MessageBody: string;
-        const EmailBody: TEmailBody): Boolean; overload;
-    property EmailBody: TEmailBody read FEmailBody write FEmailBody;
+    class function SendMail(const EmailMessage: TEmailMessage): Boolean; overload;
+    class function SendMail(const EmailMessage: TEmailMessage; out Response: TCloudResponseInfo): Boolean; overload;
   end;
 
 implementation
@@ -79,7 +74,6 @@ begin
     Peer.IOHandler := PeerFactory.CreatePeer('', IIPSSLIOHandlerSocketOpenSSL, nil) as IIPSSLIOHandlerSocketOpenSSL;
 
     PrepareRequest(Peer);
-
     try
       Peer.DoPost(FRegion, QueryParameters);
       PopulateResponseInfo(Response, Peer);
@@ -134,44 +128,20 @@ begin
   end;
 end;
 
-function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
-    MessageBody: string; const EmailBody: TEmailBody): Boolean;
-var
-  Response: TCloudResponseInfo;
+function TAmazonEmailService.BuildQueryParameters(const EmailMessage: TEmailMessage): TStringStream;
 begin
-  try
-    Result := SendMail(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody, Response, EmailBody);
-  finally
-    if Assigned(Response) then
-      Response.Free;
-  end;
+  Result := TBuildQueryParameters.GetQueryParams(EmailMessage);
 end;
 
-function TAmazonEmailService.BuildQueryParameters(const Recipients, ReplyTo: TArray<string>; const FromName,
-    FromAddress, Subject, MessageBody: string): TStringStream;
-var
-  BuildQueryParameters: TBuildQueryParameters;
-begin
-  BuildQueryParameters := TBuildQueryParameters.Create(FEmailBody);
-  try
-    Result := BuildQueryParameters.GetQueryParams(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody);
-  finally
-    BuildQueryParameters.Free;
-  end;
-end;
-
-function TAmazonEmailService.SendMail(const Recipients, ReplyTo: TArray<string>; const FromName, FromAddress, Subject,
-    MessageBody: string; out Response: TCloudResponseInfo; const EmailBody: TEmailBody): Boolean;
+function TAmazonEmailService.Send(const EmailMessage: TEmailMessage; out Response: TCloudResponseInfo): Boolean;
 var
   QueryParameters: TStringStream;
 begin
-  FEmailBody := EmailBody;
-
   CoInitialize(nil);
   try
     Response := TCloudResponseInfo.Create;
 
-    QueryParameters := BuildQueryParameters(Recipients, ReplyTo, FromName, FromAddress, Subject, MessageBody);
+    QueryParameters := BuildQueryParameters(EmailMessage);
     try
       IssueRequest(QueryParameters, Response);
       Result := (Response <> nil) and (Response.StatusCode = 200);
@@ -181,6 +151,30 @@ begin
     end;
   finally
     CoUninitialize;
+  end;
+end;
+
+class function TAmazonEmailService.SendMail(const EmailMessage: TEmailMessage): Boolean;
+var
+  Response: TCloudResponseInfo;
+begin
+  try
+    Result := TAmazonEmailService.SendMail(EmailMessage, Response);
+  finally
+    Response.Free;
+  end;
+end;
+
+class function TAmazonEmailService.SendMail(const EmailMessage: TEmailMessage;
+  out Response: TCloudResponseInfo): Boolean;
+var
+  AmazonEmailService: TAmazonEmailService;
+begin
+  AmazonEmailService := TAmazonEmailService.Create;
+  try
+    Result := AmazonEmailService.Send(EmailMessage, Response);
+  finally
+    AmazonEmailService.Free;
   end;
 end;
 

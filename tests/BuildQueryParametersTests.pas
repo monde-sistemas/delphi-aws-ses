@@ -5,21 +5,19 @@ interface
 uses
   Classes,
   DUnitX.TestFramework,
+  AmazonEmailMessage,
   BuildQueryParameters;
 
 type
   [TestFixture]
   TBuildQueryParametersTests = class
   strict private
-    FRecipients: TArray<string>;
-    FBuildQueryParameters: TBuildQueryParameters;
+    FEmailMessage: TEmailMessage;
   private
     procedure AddRecipient(const Address: string);
   public
     [Setup]
     procedure SetUp;
-    [TearDown]
-    procedure TearDown;
   published
     procedure GetQueryParams_WithHTMLBody_EncodedParamsReturned;
     procedure GetQueryParams_WithTextBody_EncodedParamsReturned;
@@ -35,8 +33,8 @@ uses
 
 procedure TBuildQueryParametersTests.AddRecipient(const Address: string);
 begin
-  SetLength(FRecipients, Length(FRecipients) +1);
-  FRecipients[High(FRecipients)] := Address;
+  SetLength(FEmailMessage.Recipients, Length(FEmailMessage.Recipients) + 1);
+  FEmailMessage.Recipients[High(FEmailMessage.Recipients)] := Address;
 end;
 
 procedure TBuildQueryParametersTests.GetQueryParams_MutipleRecipients_RecipientsAdded;
@@ -48,7 +46,7 @@ var
 begin
   AddRecipient('emailFrom2@mail.com');
 
-  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, '', 'email@email.com', '', '');
+  EncodedParams := TBuildQueryParameters.GetQueryParams(FEmailMessage);
   try
     Assert.Contains(EncodedParams.DataString, ExpectedRecipients);
   finally
@@ -58,11 +56,12 @@ end;
 
 procedure TBuildQueryParametersTests.GetQueryParams_FromNameSpecified_FromNameEncoded;
 const
-  ExpectedSource = '&Source=%3D%3Futf-8%3FB%3FW0FDTUVdIEpvaG4gRG9l%3F%3D%20%3Cemail%40email.com%3E';
+  ExpectedSource = '&Source=%3D%3Futf-8%3FB%3FW0FDTUVdIEpvaG4gRG9l%3F%3D%20%3Cemail%40mail.com%3E';
 var
   EncodedParams: TStringStream;
 begin
-  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, '[ACME] John Doe', 'email@email.com', '', '');
+  FEmailMessage.FromName := '[ACME] John Doe';
+  EncodedParams := TBuildQueryParameters.GetQueryParams(FEmailMessage);
   try
     Assert.Contains(EncodedParams.DataString, ExpectedSource);
   finally
@@ -85,12 +84,11 @@ const
                     'ensure%20that%20the%20browser%20will%20display%20the%20text%20properly.%3C%2Fp%3E%3C%2' +
                     'Fbody%3E%3C%2Fhtml%3E';
 var
-  FromAddress, Subject, MessageBody: string;
   EncodedParams: TStringStream;
 begin
-  FromAddress := 'email@mail.com';
-  Subject := 'This is the subject line with HTML.';
-  MessageBody := '<!DOCTYPE html>' +
+  FEmailMessage.BodyType := btHTML;
+  FEmailMessage.Subject := 'This is the subject line with HTML.';
+  FEmailMessage.Body := '<!DOCTYPE html>' +
     '<html>' +
     '<body>' +
     '<p>' +
@@ -103,7 +101,7 @@ begin
     '</body>' +
     '</html>';
 
-  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, '', FromAddress, Subject, MessageBody);
+  EncodedParams := TBuildQueryParameters.GetQueryParams(FEmailMessage);
   try
     Assert.AreEqual(EXPECTED_RETURN, EncodedParams.DataString);
   finally
@@ -117,11 +115,10 @@ const
                     '&ReplyToAddresses.member.2=emailtoreply2%40mail.com';
 var
   EncodedParams: TStringStream;
-  ReplyTo: TArray<string>;
 begin
-  ReplyTo := TArray<string>.Create('emailtoreply1@mail.com', 'emailtoreply2@mail.com');
+  FEmailMessage.ReplyTo := TArray<string>.Create('emailtoreply1@mail.com', 'emailtoreply2@mail.com');
 
-  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, ReplyTo, '', 'email@email.com', '', '');
+  EncodedParams := TBuildQueryParameters.GetQueryParams(FEmailMessage);
   try
     Assert.Contains(EncodedParams.DataString, ExpectedRecipients);
   finally
@@ -139,15 +136,13 @@ const
                     '&Message.Body.Text.Charset=UTF-8' +
                     '&Message.Body.Text.Data=Hello.%20I%20hope%20you%20are%20having%20a%20good%20day.';
 var
-  FromAddress, Subject, MessageBody: string;
   EncodedParams: TStringStream;
 begin
-  FromAddress := 'email@mail.com';
-  Subject := 'This is the subject line.';
-  MessageBody := 'Hello. I hope you are having a good day.';
+  FEmailMessage.BodyType := btText;
+  FEmailMessage.Subject := 'This is the subject line.';
+  FEmailMessage.Body := 'Hello. I hope you are having a good day.';
 
-  FBuildQueryParameters.EmailBody := eText;
-  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, '', FromAddress, Subject, MessageBody);
+  EncodedParams := TBuildQueryParameters.GetQueryParams(FEmailMessage);
   try
     Assert.AreEqual(EXPECTED_RETURN, EncodedParams.DataString);
   finally
@@ -158,14 +153,8 @@ end;
 procedure TBuildQueryParametersTests.SetUp;
 begin
   inherited;
-  FBuildQueryParameters := TBuildQueryParameters.Create(eHTML);
-  FRecipients := TArray<string>.Create('emailFrom@mail.com');
-end;
-
-procedure TBuildQueryParametersTests.TearDown;
-begin
-  inherited;
-  FBuildQueryParameters.Free;
+  FEmailMessage.FromAddress := 'email@mail.com';
+  FEmailMessage.Recipients := TArray<string>.Create('emailFrom@mail.com');
 end;
 
 initialization
