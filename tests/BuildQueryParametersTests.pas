@@ -33,7 +33,7 @@ uses
 
 procedure TBuildQueryParametersTests.AddRecipient(const Address: string);
 begin
-  SetLength(FEmailMessage.Recipients, Length(FEmailMessage.Recipients) +1);
+  SetLength(FEmailMessage.Recipients, Length(FEmailMessage.Recipients) + 1);
   FEmailMessage.Recipients[High(FEmailMessage.Recipients)] := Address;
 end;
 

@@ -161,8 +161,7 @@ begin
   try
     Result := TAmazonEmailService.SendMail(EmailMessage, Response);
   finally
-    if Assigned(Response) then
-      Response.Free;
+    Response.Free;
   end;
 end;
 
