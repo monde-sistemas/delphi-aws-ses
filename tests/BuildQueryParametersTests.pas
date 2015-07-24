@@ -11,8 +11,10 @@ type
   [TestFixture]
   TBuildQueryParametersTests = class
   strict private
-    FRecipients: TStrings;
+    FRecipients: TArray<string>;
     FBuildQueryParameters: TBuildQueryParameters;
+  private
+    procedure AddRecipient(const Address: string);
   public
     [Setup]
     procedure SetUp;
@@ -22,12 +24,19 @@ type
     procedure GetQueryParams_WithHTMLBody_EncodedParamsReturned;
     procedure GetQueryParams_WithTextBody_EncodedParamsReturned;
     procedure GetQueryParams_MutipleRecipients_RecipientsAdded;
+    procedure GetQueryParams_WithReplyToAddresses_AddressesAdded;
   end;
 
 implementation
 
 uses
   AmazonEmailService;
+
+procedure TBuildQueryParametersTests.AddRecipient(const Address: string);
+begin
+  SetLength(FRecipients, Length(FRecipients) +1);
+  FRecipients[High(FRecipients)] := Address;
+end;
 
 procedure TBuildQueryParametersTests.GetQueryParams_MutipleRecipients_RecipientsAdded;
 const
@@ -36,7 +45,7 @@ const
 var
   EncodedParams: TStringStream;
 begin
-  FRecipients.Add('emailFrom2@mail.com');
+  AddRecipient('emailFrom2@mail.com');
 
   EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, 'email@email.com', '', '');
   try
@@ -87,6 +96,24 @@ begin
   end;
 end;
 
+procedure TBuildQueryParametersTests.GetQueryParams_WithReplyToAddresses_AddressesAdded;
+const
+  ExpectedRecipients = '&ReplyToAddresses.member.1=emailtoreply1%40mail.com' +
+                    '&ReplyToAddresses.member.2=emailtoreply2%40mail.com';
+var
+  EncodedParams: TStringStream;
+  ReplyTo: TArray<string>;
+begin
+  ReplyTo := TArray<string>.Create('emailtoreply1@mail.com', 'emailtoreply2@mail.com');
+
+  EncodedParams := FBuildQueryParameters.GetQueryParams(FRecipients, ReplyTo, 'email@email.com', '', '');
+  try
+    Assert.Contains(EncodedParams.DataString, ExpectedRecipients);
+  finally
+    EncodedParams.Free;
+  end;
+end;
+
 procedure TBuildQueryParametersTests.GetQueryParams_WithTextBody_EncodedParamsReturned;
 const
   EXPECTED_RETURN = 'Action=SendEmail' +
@@ -117,14 +144,12 @@ procedure TBuildQueryParametersTests.SetUp;
 begin
   inherited;
   FBuildQueryParameters := TBuildQueryParameters.Create(eHTML);
-  FRecipients := TStringList.Create;
-  FRecipients.Add('emailFrom@mail.com');
+  FRecipients := TArray<string>.Create('emailFrom@mail.com');
 end;
 
 procedure TBuildQueryParametersTests.TearDown;
 begin
   inherited;
-  FRecipients.Free;
   FBuildQueryParameters.Free;
 end;
 
