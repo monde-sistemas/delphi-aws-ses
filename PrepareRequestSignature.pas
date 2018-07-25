@@ -19,7 +19,7 @@ type
 implementation
 
 uses
-  AmazonEmailAuthentication;
+  Data.Cloud.AmazonAPI;
 
 constructor TPrepareRequestSignature.Create(AWSAccessKey, AWSSecretKey: string);
 begin
@@ -37,9 +37,9 @@ end;
 
 function TPrepareRequestSignature.GetSignature(const StringToSign: string): string;
 var
-  AmazonEmailAuthentication: TAmazonEmailAuthentication;
+  AmazonEmailAuthentication: TAmazonAuthentication;
 begin
-  AmazonEmailAuthentication := TAmazonEmailAuthentication.Create(FConnectionInfo);
+  AmazonEmailAuthentication := TAmazonAuthentication.Create(FConnectionInfo);
   try
     Result := AmazonEmailAuthentication.BuildAuthorizationString(StringToSign);
   finally
